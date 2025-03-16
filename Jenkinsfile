@@ -46,6 +46,9 @@ pipeline {
 
                     // 定义服务模块
                     def services = [ 'user-service', 'review-service']
+                    def ports = [21001,21002]
+
+                    def index = 0;
 
 
                     // 遍历服务模块，构建每个服务的 Docker 镜像
@@ -53,6 +56,8 @@ pipeline {
 
 						def imageName = "${service}:${TAG}"
 						def tagName = "${HARBOR_URL}/${HARBOR_PROJECT}/${service}:${TAG}"
+						def p = ports[index]
+						index = index + 1
 
 						sh """
 						cd ${service}
@@ -70,7 +75,21 @@ pipeline {
 						docker tag ${imageName} ${tagName}
 
 						docker push ${tagName}
+
+						docker rmi ${imageName}
+
+						docker rmi ${tagName}
 						"""
+
+						sshPublisher(
+							publishers:
+								[
+									sshPublisherDesc(
+										configName: 'prod_server', transfers: [sshTransfer(cleanRemote: false, excludes: '',
+											execCommand: "/app/jenkins/jenkins_shell/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
+										)
+								]
+						)
 
                     }
                 }
