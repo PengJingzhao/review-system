@@ -5,8 +5,8 @@ pipeline {
     environment {
 		HARBOR_URL = "192.168.59.140:9000"           // Harbor 镜像仓库地址
         HARBOR_PROJECT = "review-system"           // Harbor 项目名称
-        DOCKER_CREDENTIALS_ID_USR = "PengJingzhao"    // Jenkins 中配置的 Docker 登录凭据 ID
-        DOCKER_CREDENTIALS_ID_PSW = "12345678Pj"
+        DOCKER_CREDENTIALS_ID = "3ff1f9a0-bf1e-41fa-9b0d-3db5f05c920d"
+        TAG = "latest"
     }
 
     stages {
@@ -47,16 +47,31 @@ pipeline {
                     // 定义服务模块
                     def services = [ 'user-service', 'review-service']
 
+
                     // 遍历服务模块，构建每个服务的 Docker 镜像
                     for (service in services) {
+
+						def imageName = "${service}:${TAG}"
+						def tagName = "${HARBOR_URL}/${HARBOR_PROJECT}/${service}:${TAG}"
+
 						sh """
 						cd ${service}
 
 						mvn clean package dockerfile:build
+
 						"""
-						//sh """
-                        //    docker build -t ${HARBOR_URL}/${HARBOR_PROJECT}/${service}:latest -f ${service}/Dockerfile ${service}
-                        //"""
+
+						withCredentials([usernamePassword(credentialsId: ${DOCKER_CREDENTIALS_ID}, passwordVariable: 'password', usernameVariable: 'username')]) {
+							// some block
+							sh "docker login -u ${username} -p ${password}"
+						}
+
+						sh """
+						docker tag ${imageName} ${tagName}
+
+						docker push ${tagName}
+						"""
+
                     }
                 }
             }
