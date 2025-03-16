@@ -41,20 +41,24 @@ pipeline {
         // 构建 Docker 镜像
         stage('Build Service Modules') {
 			steps {
-				sh "mvn clean package dockerfile:build"
-				//script {
-				//	echo "Building Docker images for all services..."
-				//
-                //    // 定义服务模块
-                //    def services = [ 'user-service', 'review-service']
-				//
-                //    // 遍历服务模块，构建每个服务的 Docker 镜像
-                //    for (service in services) {
-				//		sh """
-                //            docker build -t ${HARBOR_URL}/${HARBOR_PROJECT}/${service}:latest -f ${service}/Dockerfile ${service}
-                //        """
-                //    }
-                //}
+				script {
+					echo "Building Docker images for all services..."
+
+                    // 定义服务模块
+                    def services = [ 'user-service', 'review-service']
+
+                    // 遍历服务模块，构建每个服务的 Docker 镜像
+                    for (service in services) {
+						sh """
+						cd ${service}
+
+						mvn clean package dockerfile:build
+						"""
+						//sh """
+                        //    docker build -t ${HARBOR_URL}/${HARBOR_PROJECT}/${service}:latest -f ${service}/Dockerfile ${service}
+                        //"""
+                    }
+                }
             }
         }
 
