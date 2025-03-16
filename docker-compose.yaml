@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # Dubbo 注册中心：Zookeeper
+  zookeeper:
+    image: zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    restart: always
+
+  # 网关服务
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "8080:8080"  # 暴露网关的 HTTP 端口
+    depends_on:
+      - user-service
+      - review-service
+      - merchant-service
+    restart: always
+
+  # 用户服务
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "20880:20880"  # Dubbo 用户服务端口
+    depends_on:
+      - zookeeper
+    restart: always
+
+  # 点评服务
+  review-service:
+    build:
+      context: ./services/review-service
+      dockerfile: Dockerfile
+    container_name: review-service
+    ports:
+      - "20881:20881" # Dubbo 点评服务端口
+    depends_on:
+      - zookeeper
+    restart: always
+
+  # 商户服务
+  merchant-service:
+    build:
+      context: ./services/merchant-service
+      dockerfile: Dockerfile
+    container_name: merchant-service
+    ports:
+      - "20882:20882"  # Dubbo 商户服务端口
+    depends_on:
+      - zookeeper
+    restart: always
+
+  # 商品服务
+  product-service:
+    build:
+      context: ./services/product-service
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "20883:20883"  # Dubbo 商品服务端口
+    depends_on:
+      - zookeeper
+    restart: always
+
+  # 文件服务
+  file-service:
+    build:
+      context: ./file-service
+      dockerfile: Dockerfile
+    container_name: file-service
+    ports:
+      - "20884:20884"  # Dubbo 文件服务端口
+    depends_on:
+      - zookeeper
+    restart: always
+
+  # 认证服务
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "20885:20885"  # Dubbo 认证服务端口
+    depends_on:
+      - zookeeper
+    restart: always
