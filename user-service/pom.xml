@@ -50,7 +50,7 @@
                         <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
                     <dockerfile>
-                        ${project.basedir}/Dockerfile
+                        /${project.basedir}/Dockerfile
                     </dockerfile>
                 </configuration>
             </plugin>
