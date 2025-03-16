@@ -63,7 +63,7 @@ pipeline {
 
 						withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", passwordVariable: 'password', usernameVariable: 'username')]) {
 							// some block
-							sh "docker login -u ${username} -p ${password}"
+							sh "docker login -u ${username} -p ${password} ${HARBOR_URL}"
 						}
 
 						sh """
