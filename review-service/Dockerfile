@@ -19,4 +19,4 @@ ENV SPRING_CONFIG_FILE="application-dev.yml"
 ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseContainerSupport"
 
 # 设置启动命令
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar --spring.config.location=$SPRING_CONFIG_FILE"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar"]
