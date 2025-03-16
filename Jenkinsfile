@@ -81,6 +81,7 @@ pipeline {
 						docker rmi ${tagName}
 						"""
 
+						sh "echo /app/jenkins/jenkins_shell/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}"
 						sshPublisher(
 							publishers:
 								[
