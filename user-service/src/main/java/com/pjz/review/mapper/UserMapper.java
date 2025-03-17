@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * <p>
@@ -30,7 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
         User user = new User();
         user.setPhone(phone);
         user.setCreatedAt(LocalDateTime.now());
-        user.setName("user_"+ Arrays.toString(RandomUtils.nextBytes(10)));
+        user.setName("user_"+ UUID.randomUUID());
         insert(user);
         return user;
     }
