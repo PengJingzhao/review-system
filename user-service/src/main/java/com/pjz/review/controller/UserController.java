@@ -2,6 +2,7 @@ package com.pjz.review.controller;
 
 import com.pjz.commons.result.CommonResult;
 import com.pjz.review.entity.dto.LoginFormDTO;
+import com.pjz.review.entity.vo.UserVO;
 import com.pjz.review.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public CommonResult<String> login(@RequestBody LoginFormDTO loginFormDTO, HttpSession session) {
+    public CommonResult<UserVO> login(@RequestBody LoginFormDTO loginFormDTO, HttpSession session) {
         // 检验手机号，校验登录用户
         return CommonResult.success(userService.login(loginFormDTO, session));
     }

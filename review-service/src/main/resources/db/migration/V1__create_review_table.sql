@@ -1,10 +1,8 @@
 -- V1__create_review_table.sql
-CREATE TABLE user
+CREATE TABLE review
 (
     id         INT AUTO_INCREMENT PRIMARY KEY,
-    name       VARCHAR(50),
-    email      VARCHAR(100),
-    phone      VARCHAR(50),
-    password   VARCHAR(200),
+    content    VARCHAR(50),
+    user_id    INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
