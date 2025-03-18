@@ -8,4 +8,6 @@ public interface ShopService {
 
 
     ShopVO queryById(Long id);
+
+    Void updateById(ShopVO shopVO);
 }

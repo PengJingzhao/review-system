@@ -19,8 +19,8 @@
 
     <!-- Java版本 -->
     <properties>
-        <java.version>11</java.version>
-        <spring.boot.version>2.7.6</spring.boot.version>
+        <java.version>17</java.version>
+        <spring.boot.version>2.7.18</spring.boot.version>
         <spring.cloud.version>2021.0.7</spring.cloud.version>
 
         <swagger.version>1.7.0</swagger.version>
@@ -54,6 +54,12 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${swagger.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.33</version>
             </dependency>
 
         </dependencies>

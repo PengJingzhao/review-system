@@ -11,12 +11,6 @@
 
     <artifactId>shop-service</artifactId>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,6 +45,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
 
         <dependency>
@@ -64,6 +59,19 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.27</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.github.gavlyukovskiy</groupId>-->
+<!--            <artifactId>p6spy-spring-boot-starter</artifactId>-->
+<!--            <version>1.10.0</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
