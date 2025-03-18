@@ -1,2 +1,27 @@
 server:
-  port: 21002
+  port: 15003
+# 配置 Springdoc OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs       # OpenAPI 文档路径
+  swagger-ui:
+    path: /swagger-ui        # Swagger UI 路径
+  show-actuator: true        # 如果项目集成了 Actuator，可以显示相关文档
+
+# 自定义文档组和标题
+springdoc.group-configs:
+  - group: user-api         # 定义文档组名称
+    paths-to-match: /api/user/** # 定义包含的路径
+    packages-to-scan: com.pjz.review.controller # 定义扫描的包路径
+# 日志配置
+logging:
+  level:
+    com.pjz: info
+    org.springframework: warn
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/review_system?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 2048711712P!
+    type: com.zaxxer.hikari.HikariDataSource

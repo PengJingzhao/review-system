@@ -43,7 +43,7 @@ pipeline {
 
                     // 定义服务模块
                     def services = [ 'user-service', 'review-service','shop-service']
-                    def ports = [21001,21002,21004]
+                    def ports = [15001,15003,15002]
 
                     def index = 0;
 

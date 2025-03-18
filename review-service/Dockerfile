@@ -10,7 +10,7 @@ WORKDIR /app
 COPY ${JAR_FILE} app.jar
 
 # 暴露 Dubbo 默认端口
-EXPOSE 21002
+EXPOSE 15003
 
 # 默认配置文件路径（可在运行时覆盖）
 ENV SPRING_CONFIG_FILE="prod"
