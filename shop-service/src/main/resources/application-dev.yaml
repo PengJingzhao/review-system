@@ -21,24 +21,17 @@ logging:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review_system?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/review_system?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
+
     username: root
     password: 2048711712P!
     type: com.zaxxer.hikari.HikariDataSource
-  flyway:
-    enabled: true
-    # 用于存储迁移历史记录的表名, 默认: flyway_schema_history
-    table: flyway_schema_history
-    # 迁移脚本编码, 默认: UTF-8
-    encoding: UTF-8
-    # 当迁移数据库存在但没有元数据的表时，自动执行基准迁移，新建flyway_schema_history表
-    baseline-on-migrate: true
-    # 数据库迁移脚本的位置, 默认: classpath:db/migration    # 这里也支持文件系统路径，前缀：filesystem:
-    locations:
-      - classpath:db/migration
   redis:
     port: 6379
     host: localhost
-
+mybatis-plus:
+  configuration:
+    # 关闭控制台打印日志
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 
 
