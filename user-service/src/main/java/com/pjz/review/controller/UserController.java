@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public CommonResult<UserVO> login(@RequestBody LoginFormDTO loginFormDTO, HttpSession session) {
+    public CommonResult<String> login(@RequestBody LoginFormDTO loginFormDTO, HttpSession session) {
         // 检验手机号，校验登录用户
         return CommonResult.success(userService.login(loginFormDTO, session));
     }

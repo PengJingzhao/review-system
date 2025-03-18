@@ -10,5 +10,5 @@ public interface UserService {
 
     String sendCode(String phone, HttpSession session);
 
-    UserVO login(LoginFormDTO loginFormDTO, HttpSession session);
+    String login(LoginFormDTO loginFormDTO, HttpSession session);
 }
