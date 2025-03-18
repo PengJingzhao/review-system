@@ -1,5 +1,5 @@
 server:
-  port: 15001
+  port: 15002
 # 配置 Springdoc OpenAPI
 springdoc:
   api-docs:
@@ -10,8 +10,8 @@ springdoc:
 
 # 自定义文档组和标题
 springdoc.group-configs:
-  - group: user-api         # 定义文档组名称
-    paths-to-match: /api/user/** # 定义包含的路径
+  - group: shop-api         # 定义文档组名称
+    paths-to-match: /api/shop/** # 定义包含的路径
     packages-to-scan: com.pjz.review.controller # 定义扫描的包路径
 # 日志配置
 logging:
@@ -35,7 +35,7 @@ spring:
     baseline-on-migrate: true
     # 数据库迁移脚本的位置, 默认: classpath:db/migration    # 这里也支持文件系统路径，前缀：filesystem:
     locations:
-      - classpath:db/migration1
+      - classpath:db/migration
   redis:
     port: 6379
     host: localhost

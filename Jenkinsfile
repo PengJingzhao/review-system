@@ -42,8 +42,8 @@ pipeline {
 					echo "Building Docker images for all services..."
 
                     // 定义服务模块
-                    def services = [ 'user-service', 'review-service']
-                    def ports = [21001,21002]
+                    def services = [ 'user-service', 'review-service','shop-service']
+                    def ports = [21001,21002,21004]
 
                     def index = 0;
 
