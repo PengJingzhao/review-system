@@ -58,9 +58,8 @@ pipeline {
 
                         // 根据dockerfile打包成镜像
 						sh """
-						cd ${service}
 
-						mvn clean package dockerfile:build
+						mvn -f ./${service}/pom.xml  clean package dockerfile:build
 
 						"""
 
