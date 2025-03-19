@@ -5,6 +5,7 @@ import com.pjz.review.entity.Shops;
 import com.pjz.review.entity.vo.ShopVO;
 import com.pjz.review.mapper.ShopsMapper;
 import com.pjz.review.service.ShopService;
+import com.pjz.review.utils.RedisUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @Override
     public ShopVO queryById(Long id) {
