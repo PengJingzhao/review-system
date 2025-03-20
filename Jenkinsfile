@@ -3,7 +3,7 @@ pipeline {
 
     // 全局环境变量
     environment {
-		HARBOR_URL = "192.168.59.140:9000"           // Harbor 镜像仓库地址
+		HARBOR_URL = "192.168.59.142:9000"           // Harbor 镜像仓库地址
         HARBOR_PROJECT = "review-system"           // Harbor 项目名称
         DOCKER_CREDENTIALS_ID = "3ff1f9a0-bf1e-41fa-9b0d-3db5f05c920d"
         TAG = "latest"
@@ -21,6 +21,15 @@ pipeline {
                         url: 'git@github.com:PengJingzhao/review-system.git'
                     ]]
                 )
+            }
+        }
+
+        // 将父工程的pom.xml添加到本地仓库
+        stage('Install Parent Pom'){
+            steps{
+                script{
+                    sh " mvn clean install -N"
+                }
             }
         }
 
@@ -58,8 +67,9 @@ pipeline {
 
                         // 根据dockerfile打包成镜像
 						sh """
+						cd ${service}
 
-						mvn -f ./${service}/pom.xml  clean package dockerfile:build
+						mvn clean package dockerfile:build
 
 						"""
 
