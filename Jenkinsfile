@@ -5,7 +5,7 @@ pipeline {
     environment {
 		HARBOR_URL = "192.168.59.142:9000"           // Harbor 镜像仓库地址
         HARBOR_PROJECT = "review-system"           // Harbor 项目名称
-        DOCKER_CREDENTIALS_ID = "3ff1f9a0-bf1e-41fa-9b0d-3db5f05c920d"
+        DOCKER_CREDENTIALS_ID = "ca805745-dd5d-442b-884b-b3e2294da05e"
         TAG = "latest"
     }
 
