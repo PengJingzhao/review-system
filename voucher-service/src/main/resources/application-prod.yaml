@@ -1,0 +1,34 @@
+server:
+  port: 15004
+# 配置 Springdoc OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs       # OpenAPI 文档路径
+  swagger-ui:
+    path: /swagger-ui        # Swagger UI 路径
+  show-actuator: true        # 如果项目集成了 Actuator，可以显示相关文档
+
+# 自定义文档组和标题
+springdoc.group-configs:
+  - group: voucher-api         # 定义文档组名称
+    paths-to-match: /api/voucher/** # 定义包含的路径
+    packages-to-scan: com.pjz.review.controller # 定义扫描的包路径
+# 日志配置
+logging:
+  level:
+    com.pjz: info
+    org.springframework: warn
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/review_system?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
+    username: root
+    password: 2048711712P!
+    type: com.zaxxer.hikari.HikariDataSource
+  redis:
+    port: 6379
+    host: localhost
+mybatis-plus:
+  configuration:
+    # 关闭控制台打印日志
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
