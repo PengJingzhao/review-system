@@ -10,8 +10,8 @@ springdoc:
 
 # 自定义文档组和标题
 springdoc.group-configs:
-  - group: shop-api         # 定义文档组名称
-    paths-to-match: /api/shop/** # 定义包含的路径
+  - group: voucher-api         # 定义文档组名称
+    paths-to-match: /api/voucher/** # 定义包含的路径
     packages-to-scan: com.pjz.review.controller # 定义扫描的包路径
 # 日志配置
 logging:
