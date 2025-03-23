@@ -4,4 +4,6 @@ import com.pjz.review.entity.bo.VoucherBO;
 
 public interface VoucherService {
     Long addSecKillVoucher(VoucherBO voucherBO);
+
+    Long secKillVoucher(Long id);
 }
