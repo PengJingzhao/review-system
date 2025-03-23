@@ -33,5 +33,18 @@ mybatis-plus:
   configuration:
     # 关闭控制台打印日志
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+# application.yml 配置示例
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "hawtio,jolokia"
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  health:
+    redis:
+      enabled: false
 
 

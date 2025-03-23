@@ -6,6 +6,7 @@ import com.pjz.review.entity.VoucherOrder;
 import com.pjz.review.entity.bo.VoucherBO;
 import com.pjz.review.mapper.SeckillVoucherMapper;
 import com.pjz.review.mapper.VoucherMapper;
+import com.pjz.review.mapper.VoucherOrderMapper;
 import com.pjz.review.service.VoucherService;
 import com.pjz.review.util.RedisWorker;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +27,9 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Resource
     private RedisWorker redisWorker;
+
+    @Resource
+    private VoucherOrderMapper voucherOrderMapper;
 
     @Override
     public Long addSecKillVoucher(VoucherBO voucherBO) {
@@ -58,6 +62,8 @@ public class VoucherServiceImpl implements VoucherService {
         // 校验当前优惠券是否处于秒杀有效期内
         SeckillVoucher seckillVoucher = seckillVoucherMapper.getById(id);
 
+        Assert.notNull(seckillVoucher, "优惠券不存在");
+
         Assert.isTrue(!seckillVoucher.getBeginTime().isAfter(LocalDateTime.now()), "秒杀尚未开始");
 
         Assert.isTrue(!seckillVoucher.getEndTime().isBefore(LocalDateTime.now()), "秒杀已经结束");
@@ -66,7 +72,7 @@ public class VoucherServiceImpl implements VoucherService {
         // 判断库存是否充足
         Integer stock = seckillVoucher.getStock();
         Assert.isTrue(stock >= 1, "库存不足");
-        boolean success = seckillVoucherMapper.decrStockById(id);
+        boolean success = seckillVoucherMapper.decrStockById(id, stock);
         Assert.isTrue(success, "库存扣减失败");
 
         // 创建订单
@@ -75,7 +81,9 @@ public class VoucherServiceImpl implements VoucherService {
         // 获得订单id
         Long orderId = redisWorker.nextId("order");
         voucherOrder.setUserId(1L);
-        voucherOrder.setVoucherId(orderId);
+        voucherOrder.setVoucherId(id);
+        voucherOrder.setId(orderId);
+        voucherOrderMapper.add(voucherOrder);
 
         return orderId;
     }

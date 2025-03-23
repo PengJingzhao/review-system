@@ -28,9 +28,15 @@ public interface SeckillVoucherMapper extends BaseMapper<SeckillVoucher> {
         return selectOne(wrapper);
     }
 
-    default boolean decrStockById(Long id) {
+    default boolean decrStockById(Long id, Integer stock) {
         LambdaUpdateWrapper<SeckillVoucher> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(SeckillVoucher::getVoucherId, id)
+                // 只有在stock的现值与一开始查询到的原值相等，即stock没有被其他线程修改时，才会去更新数据，
+                // 否则就不更新然后退出重试，
+                // 体现了cas的思想，确保了线程安全
+                // 但是cas乐观锁有一个弊端就是凡是修改过了的数据都无法继续操作，只能退出重试，这样就会导致业务的成功率大大降低
+//                .eq(SeckillVoucher::getStock, stock)
+                .gt(SeckillVoucher::getStock, 0)
                 .setSql("stock = stock - 1");
         return update(null, wrapper) == 1;
     }

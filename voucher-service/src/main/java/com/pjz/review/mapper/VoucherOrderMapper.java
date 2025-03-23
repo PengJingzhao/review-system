@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author pjz
@@ -15,4 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface VoucherOrderMapper extends BaseMapper<VoucherOrder> {
 
+    default void add(VoucherOrder voucherOrder) {
+        insert(voucherOrder);
+    }
 }
