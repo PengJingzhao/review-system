@@ -1,15 +1,13 @@
-package com.pjz.review.entity.bo;
+package com.pjz.review.common.entity.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShopBO {
+public class ShopVO {
 
     private Integer id;
 

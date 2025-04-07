@@ -1,4 +1,4 @@
-package com.pjz.review.entity.dto;
+package com.pjz.review.common.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

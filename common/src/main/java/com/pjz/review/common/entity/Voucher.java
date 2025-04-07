@@ -1,13 +1,35 @@
-package com.pjz.review.entity.bo;
+package com.pjz.review.common.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
+/**
+ * <p>
+ * 
+ * </p>
+ *
+ * @author pjz
+ * @since 2025-03-22
+ */
 @Data
-public class VoucherBO {
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@TableName("tb_voucher")
+public class Voucher implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 主键
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 商铺id
@@ -44,16 +66,10 @@ public class VoucherBO {
      */
     private Integer type;
 
-
     /**
-     * 关联的优惠券id
+     * 状态: 1,上架；2，下架；3，过期
      */
-    private Long voucherId;
-
-    /**
-     * 库存
-     */
-    private Integer stock;
+    private Integer status;
 
     /**
      * 创建时间
@@ -61,13 +77,9 @@ public class VoucherBO {
     private LocalDateTime createTime;
 
     /**
-     * 开始时间
+     * 更新时间
      */
-    private LocalDateTime beginTime;
+    private LocalDateTime updateTime;
 
-    /**
-     * 结束时间
-     */
-    private LocalDateTime endTime;
 
 }

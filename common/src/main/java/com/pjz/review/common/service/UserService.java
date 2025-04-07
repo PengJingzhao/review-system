@@ -1,8 +1,7 @@
-package com.pjz.review.service;
+package com.pjz.review.common.service;
 
-import com.pjz.review.entity.dto.LoginFormDTO;
-import com.pjz.review.entity.vo.UserVO;
 
+import com.pjz.review.common.entity.dto.LoginFormDTO;
 import javax.servlet.http.HttpSession;
 
 public interface UserService {

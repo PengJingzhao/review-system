@@ -3,12 +3,12 @@ package com.pjz.review.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.pjz.commons.utils.ValidatorUtil;
 import com.pjz.review.entity.User;
-import com.pjz.review.entity.dto.LoginFormDTO;
-import com.pjz.review.entity.vo.UserVO;
+import com.pjz.review.common.entity.dto.LoginFormDTO;
+import com.pjz.review.common.entity.vo.UserVO;
 import com.pjz.review.mapper.UserMapper;
-import com.pjz.review.service.UserService;
-import com.pjz.review.util.RedisConstants;
+import com.pjz.review.common.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,6 +27,7 @@ import static com.pjz.review.util.RedisConstants.*;
 
 @Slf4j
 @Service
+@DubboService
 public class UserServiceImpl implements UserService {
 
     @Resource

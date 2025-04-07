@@ -2,10 +2,11 @@ package com.pjz.review.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.pjz.review.entity.Shops;
-import com.pjz.review.entity.vo.ShopVO;
+import com.pjz.review.common.entity.vo.ShopVO;
 import com.pjz.review.mapper.ShopsMapper;
-import com.pjz.review.service.ShopService;
+import com.pjz.review.common.service.ShopService;
 import com.pjz.review.utils.RedisUtil;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +23,7 @@ import static com.pjz.review.utils.ExceptionsConstants.SHOP_NOT_EXITS;
 import static com.pjz.review.utils.RedisConstants.*;
 
 @Service
+@DubboService
 public class ShopServiceImpl implements ShopService {
 
     @Resource

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.apache.dubbo.demo.hello";
+option java_outer_classname = "HelloWorldProto";
+option objc_class_prefix = "HLW";
+
+package voucherservice;
+
+message AddSecKillVoucherRequest{
+  int64 shopId = 1;
+}
+
+message AddSecKillVoucherReply{
+  int64 tmp = 1;
+}
+
+message SecKillVoucherRequest{
+
+}
+
+message SecKillVoucherReply{
+
+}
+
+message CreateVoucherOrderRequest{
+
+}
+
+message CreateVoucherOrderReply{
+
+}
+
+service VoucherService{
+  rpc addSecKillVoucher (AddSecKillVoucherRequest) returns (AddSecKillVoucherReply);
+  rpc secKillVoucher(SecKillVoucherRequest) returns (SecKillVoucherReply);
+  rpc createVoucherOrder(CreateVoucherOrderRequest) returns (CreateVoucherOrderReply);
+}

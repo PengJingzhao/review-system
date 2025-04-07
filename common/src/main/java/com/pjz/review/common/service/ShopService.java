@@ -1,8 +1,7 @@
-package com.pjz.review.service;
+package com.pjz.review.common.service;
 
-import com.pjz.review.entity.vo.ShopVO;
 
-import java.util.List;
+import com.pjz.review.common.entity.vo.ShopVO;
 
 public interface ShopService {
 

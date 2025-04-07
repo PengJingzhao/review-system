@@ -25,3 +25,17 @@ spring:
     username: root
     password: 2048711712P!
     type: com.zaxxer.hikari.HikariDataSource
+dubbo:
+  application:
+    name: ${spring.application.name}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://127.0.0.1:8848
+  config-center:
+    address: nacos://127.0.0.1:8848
+  metadata-report:
+    address: nacos://127.0.0.1:8848

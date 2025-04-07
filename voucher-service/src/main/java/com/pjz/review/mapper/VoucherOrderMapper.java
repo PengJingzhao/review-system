@@ -1,7 +1,9 @@
 package com.pjz.review.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.entity.VoucherOrder;
+
+import com.pjz.review.common.entity.VoucherOrder;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -17,5 +19,12 @@ public interface VoucherOrderMapper extends BaseMapper<VoucherOrder> {
 
     default void add(VoucherOrder voucherOrder) {
         insert(voucherOrder);
+    }
+
+    default Long getCountByVoucherId(Long userId, Long voucherId){
+        LambdaQueryWrapper<VoucherOrder> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(VoucherOrder::getUserId,userId)
+                .eq(VoucherOrder::getVoucherId,voucherId);
+        return selectCount(wrapper);
     }
 }

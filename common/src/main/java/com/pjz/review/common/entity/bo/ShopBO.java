@@ -1,4 +1,4 @@
-package com.pjz.review.entity.vo;
+package com.pjz.review.common.entity.bo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShopVO {
+public class ShopBO {
 
     private Integer id;
 

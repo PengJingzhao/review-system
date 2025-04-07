@@ -3,7 +3,8 @@ package com.pjz.review.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.entity.SeckillVoucher;
+
+import com.pjz.review.common.entity.SeckillVoucher;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -23,7 +24,7 @@ public interface SeckillVoucherMapper extends BaseMapper<SeckillVoucher> {
 
     default SeckillVoucher getById(Long id) {
         LambdaQueryWrapper<SeckillVoucher> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(SeckillVoucher::getBeginTime, SeckillVoucher::getEndTime, SeckillVoucher::getStock)
+        wrapper.select(SeckillVoucher::getBeginTime, SeckillVoucher::getEndTime, SeckillVoucher::getStock, SeckillVoucher::getVoucherId)
                 .eq(SeckillVoucher::getVoucherId, id);
         return selectOne(wrapper);
     }
