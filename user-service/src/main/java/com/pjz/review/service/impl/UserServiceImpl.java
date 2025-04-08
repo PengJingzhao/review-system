@@ -6,6 +6,7 @@ import com.pjz.commons.utils.ValidatorUtil;
 import com.pjz.review.common.entity.User;
 import com.pjz.review.common.entity.dto.LoginFormDTO;
 import com.pjz.review.common.entity.vo.UserVO;
+import com.pjz.review.mapper.FollowerMapper;
 import com.pjz.review.mapper.UserMapper;
 import com.pjz.review.common.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,10 @@ import static com.pjz.review.util.ExceptionConstants.CODE_NOT_CORRECT;
 import static com.pjz.review.util.ExceptionConstants.PHONE_FORMAT_NOT_CORRECT;
 import static com.pjz.review.util.RedisConstants.*;
 
+import com.pjz.review.mapper.AttentionMapper;
+import com.pjz.review.common.entity.Attention;
+import com.pjz.review.common.entity.Follower;
+
 @Slf4j
 @Service
 @DubboService
@@ -36,6 +41,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private AttentionMapper attentionMapper;
+
+    @Resource
+    private FollowerMapper followerMapper;
 
     private static final ConcurrentMap<String, UserVO> userVOMap = new ConcurrentHashMap<>();
 
@@ -119,11 +130,11 @@ public class UserServiceImpl implements UserService {
             String followerCount = stringRedisTemplate.opsForValue().get("user:followerCount:" + userId);
             String attentionCount = stringRedisTemplate.opsForValue().get("user:attentionCount:" + userId);
 
-            if (followerCount!=null) {
+            if (followerCount != null) {
                 userVO.setFollowerCount(Integer.parseInt(followerCount));
             }
 
-            if (attentionCount!=null) {
+            if (attentionCount != null) {
                 userVO.setAttentionCount(Integer.parseInt(attentionCount));
             }
 
@@ -148,5 +159,32 @@ public class UserServiceImpl implements UserService {
         userVOMap.put("user:" + userId, userVO);
 
         return userVO;
+    }
+
+    @Override
+    public void followUser(Integer userId, Integer attentionId) {
+
+        // 当前用户attentionCount加1
+        userMapper.incAttentionCnt(userId);
+        // 删除缓存
+        stringRedisTemplate.delete("user:attentionCount:" + userId);
+        // 插入attention表
+        Attention attention = new Attention();
+        attention.setUserId(userId);
+        attention.setAttentionId(attentionId);
+        attentionMapper.addAttention(attention);
+
+
+        // 当前用户要关注的用户的followerCount+1
+        userMapper.incFollowerCnt(attentionId);
+        // 删除缓存
+        stringRedisTemplate.delete("user:followerCount:" + userId);
+        // 插入follower表
+        Follower follower = new Follower();
+        follower.setUserId(attentionId);
+        follower.setFollowerId(userId);
+        followerMapper.addFollower(follower);
+
+
     }
 }

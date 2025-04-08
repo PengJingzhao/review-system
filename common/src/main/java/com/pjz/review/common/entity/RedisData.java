@@ -10,5 +10,4 @@ public class RedisData {
     private LocalDateTime expireTime;
 
     private Object data;
-
 }

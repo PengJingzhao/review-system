@@ -40,4 +40,18 @@ public interface UserMapper extends BaseMapper<User> {
         wrapper.eq(User::getId, userId);
         return selectOne(wrapper);
     }
+
+    default void incAttentionCnt(Integer userId) {
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId, userId)
+                .setSql("attention_count = attention_count + 1");
+        update(null, wrapper);
+    }
+
+    default void incFollowerCnt(Integer attentionId) {
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId, attentionId)
+                .setSql("follower_count = follower_count + 1");
+        update(null, wrapper);
+    }
 }

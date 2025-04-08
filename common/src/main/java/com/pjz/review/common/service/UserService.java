@@ -15,4 +15,6 @@ public interface UserService {
     String login(LoginFormDTO loginFormDTO, HttpSession session);
 
     UserVO getUser(Integer userId);
+
+    void followUser(Integer userId, Integer attentionId);
 }
