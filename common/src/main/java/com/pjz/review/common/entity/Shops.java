@@ -1,4 +1,4 @@
-package com.pjz.review.entity;
+package com.pjz.review.common.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -15,28 +15,42 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author pjz
- * @since 2025-03-17
+ * @since 2025-03-18
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user")
-public class User implements Serializable {
+@TableName("shops")
+public class Shops implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String name;
+    private String shopName;
 
-    private String email;
+    private String shopLogo;
+
+    private String description;
+
+    private String category;
+
+    private String address;
 
     private String phone;
 
-    private String password;
+    private String email;
+
+    private String websiteUrl;
+
+    private String socialMediaLinks;
+
+    private Integer status;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
 
 }

@@ -1,13 +1,12 @@
 package com.pjz.review.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.entity.User;
-import org.apache.commons.lang3.RandomUtils;
+import com.pjz.review.common.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -31,8 +30,14 @@ public interface UserMapper extends BaseMapper<User> {
         User user = new User();
         user.setPhone(phone);
         user.setCreatedAt(LocalDateTime.now());
-        user.setName("user_"+ UUID.randomUUID());
+        user.setName("user_" + UUID.randomUUID());
         insert(user);
         return user;
+    }
+
+    default User getUserById(Integer userId) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getId, userId);
+        return selectOne(wrapper);
     }
 }

@@ -1,7 +1,7 @@
 package com.pjz.review.service.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.pjz.review.entity.Shops;
+import com.pjz.review.common.entity.Shops;
 import com.pjz.review.common.entity.vo.ShopVO;
 import com.pjz.review.mapper.ShopsMapper;
 import com.pjz.review.common.service.ShopService;

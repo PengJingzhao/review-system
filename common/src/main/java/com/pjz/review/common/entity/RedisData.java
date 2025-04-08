@@ -1,4 +1,4 @@
-package com.pjz.review.entity;
+package com.pjz.review.common.entity;
 
 import lombok.Data;
 

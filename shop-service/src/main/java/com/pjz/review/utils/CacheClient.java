@@ -1,7 +1,7 @@
 package com.pjz.review.utils;
 
 import cn.hutool.json.JSONUtil;
-import com.pjz.review.entity.RedisData;
+import com.pjz.review.common.entity.RedisData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import static com.pjz.review.utils.RedisConstants.CACHE_SHOP_KEY;
 
 @Slf4j
 @Component

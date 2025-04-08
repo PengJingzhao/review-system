@@ -1,8 +1,9 @@
 package com.pjz.review.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.pjz.commons.utils.ValidatorUtil;
-import com.pjz.review.entity.User;
+import com.pjz.review.common.entity.User;
 import com.pjz.review.common.entity.dto.LoginFormDTO;
 import com.pjz.review.common.entity.vo.UserVO;
 import com.pjz.review.mapper.UserMapper;
@@ -16,9 +17,9 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import static com.pjz.review.util.ExceptionConstants.CODE_NOT_CORRECT;
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    private static final ConcurrentMap<String, UserVO> userVOMap = new ConcurrentHashMap<>();
 
     @Override
     public String sendCode(String phone, HttpSession session) {
@@ -90,5 +93,60 @@ public class UserServiceImpl implements UserService {
         stringRedisTemplate.expire(userVOKey, LOGIN_TOKEN_TTL, TimeUnit.MINUTES);
 
         return token;
+    }
+
+    @Override
+    public UserVO getUser(Integer userId) {
+
+        UserVO userVO;
+
+        //本地缓存
+        userVO = userVOMap.get("user:" + userId);
+        if (userVO != null) {
+            return userVO;
+        }
+
+
+        //远程缓存
+        String userVOJson = stringRedisTemplate.opsForValue().get("user:" + userId);
+        if (userVOJson != null && userVOJson.isEmpty()) {
+            return null;
+        }
+        if (userVOJson != null) {
+            userVO = JSONUtil.toBean(userVOJson, UserVO.class, true);
+
+            // 统计数据应该是额外维护
+            String followerCount = stringRedisTemplate.opsForValue().get("user:followerCount:" + userId);
+            String attentionCount = stringRedisTemplate.opsForValue().get("user:attentionCount:" + userId);
+
+            if (followerCount!=null) {
+                userVO.setFollowerCount(Integer.parseInt(followerCount));
+            }
+
+            if (attentionCount!=null) {
+                userVO.setAttentionCount(Integer.parseInt(attentionCount));
+            }
+
+            userVOMap.put("user:" + userId, userVO);
+            return userVO;
+        }
+
+        //数据库
+        User user = userMapper.getUserById(userId);
+
+        if (user == null) {
+            // 注意不存在的时候要解决缓存穿透的问题
+            stringRedisTemplate.opsForValue().set("user:" + userId, "");
+            return null;
+        }
+
+        userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+
+        // 回写缓存
+        stringRedisTemplate.opsForValue().set("user:" + userId, JSONUtil.toJsonStr(userVO));
+        userVOMap.put("user:" + userId, userVO);
+
+        return userVO;
     }
 }

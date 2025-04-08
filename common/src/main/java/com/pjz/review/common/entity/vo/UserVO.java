@@ -17,4 +17,8 @@ public class UserVO {
 
     private String phone;
 
+    private Integer attentionCount;
+
+    private Integer followerCount;
+
 }
