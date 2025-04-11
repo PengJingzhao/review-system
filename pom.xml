@@ -17,6 +17,7 @@
         <module>shop-service</module>
         <module>voucher-service</module>
         <module>common</module>
+        <module>count-service</module>
     </modules>
 
     <!-- Java版本 -->
