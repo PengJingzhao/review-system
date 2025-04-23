@@ -1,6 +1,7 @@
 package com.pjz.review.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.json.JSONUtil;
 import com.pjz.commons.utils.ValidatorUtil;
 import com.pjz.review.common.entity.User;
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
     private static final ConcurrentMap<String, UserVO> userVOMap = new ConcurrentHashMap<>();
 
     @Override
-    public String sendCode(String phone, HttpSession session) {
+    public String sendCode(String phone) {
 
         // 校验传入的手机号是否正确
         Assert.isTrue(ValidatorUtil.isValidPhone(phone), PHONE_FORMAT_NOT_CORRECT);
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(LoginFormDTO loginFormDTO, HttpSession session) {
+    public String login(LoginFormDTO loginFormDTO) {
 
         // 检验手机号
         Assert.isTrue(ValidatorUtil.isValidPhone(loginFormDTO.getPhone()), PHONE_FORMAT_NOT_CORRECT);
@@ -94,11 +95,13 @@ public class UserServiceImpl implements UserService {
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
 
-        Map<String, Object> userVOMap = BeanUtil.beanToMap(userVO);
+        HashMap<String, Object> userVoMap = new HashMap<>();
+
+        BeanUtil.beanToMap(userVO, userVoMap, new CopyOptions().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : String.valueOf(fieldValue)));
 
         String userVOKey = LOGIN_TOKEN_KEY + token;
 
-        stringRedisTemplate.opsForHash().putAll(userVOKey, userVOMap);
+        stringRedisTemplate.opsForHash().putAll(userVOKey, userVoMap);
 
         // 设置缓存过期时间
         stringRedisTemplate.expire(userVOKey, LOGIN_TOKEN_TTL, TimeUnit.MINUTES);

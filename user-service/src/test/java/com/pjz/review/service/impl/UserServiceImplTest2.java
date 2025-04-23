@@ -56,7 +56,7 @@ public class UserServiceImplTest2 {
 
         validatorUtil.when(() -> ValidatorUtil.isValidPhone(phone)).thenReturn(true);
 
-        String code = userService.sendCode(phone, null);
+        String code = userService.sendCode(phone);
 
         Assertions.assertEquals("123456", code);
 
@@ -69,7 +69,7 @@ public class UserServiceImplTest2 {
 
         validatorUtil.when(() -> ValidatorUtil.isValidPhone(phone)).thenReturn(false);
 
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> userService.sendCode(phone, null));
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> userService.sendCode(phone));
 
         Assertions.assertEquals(PHONE_FORMAT_NOT_CORRECT, exception.getMessage());
     }

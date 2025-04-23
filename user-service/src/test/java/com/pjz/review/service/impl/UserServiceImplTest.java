@@ -58,7 +58,7 @@ class UserServiceImplTest {
         when(mockStringRedisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // Run the test
-        final String result = userServiceImplUnderTest.sendCode(phone, null);
+        final String result = userServiceImplUnderTest.sendCode(phone);
 
         // Verify the results
         assertThat(result).isEqualTo("123456");
@@ -69,7 +69,7 @@ class UserServiceImplTest {
         String phone = "18718963656";
         String code = "123456";
         // Setup
-        final LoginFormDTO loginFormDTO = new LoginFormDTO(code, phone, "password");
+        final LoginFormDTO loginFormDTO = new LoginFormDTO(code, phone);
         when(mockStringRedisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // Configure UserMapper.getUserByPhone(...).
@@ -93,7 +93,7 @@ class UserServiceImplTest {
         when(mockStringRedisTemplate.opsForHash()).thenReturn(null);
 
         // Run the test
-        final String result = userServiceImplUnderTest.login(loginFormDTO, null);
+        final String result = userServiceImplUnderTest.login(loginFormDTO);
 
         // Verify the results
         assertThat(result).isEqualTo("result");

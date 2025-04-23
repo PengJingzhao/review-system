@@ -4,17 +4,22 @@ package com.pjz.review.common.service;
 import com.pjz.review.common.entity.User;
 import com.pjz.review.common.entity.dto.LoginFormDTO;
 import com.pjz.review.common.entity.vo.UserVO;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+@RequestMapping("/api/user")
 public interface UserService {
 
+    @GetMapping("/sendCode/{phone}")
+    String sendCode(@PathVariable("phone") String phone);
 
-    String sendCode(String phone, HttpSession session);
+    @PostMapping("/login")
+    String login(@RequestBody LoginFormDTO loginFormDTO);
 
-    String login(LoginFormDTO loginFormDTO, HttpSession session);
+    @DeleteMapping("/{userId}")
+    UserVO getUser(@PathVariable("userId") Integer userId);
 
-    UserVO getUser(Integer userId);
-
-    void followUser(Integer userId, Integer attentionId);
+    @GetMapping("/followUser")
+    void followUser(@RequestParam("userId") Integer userId, @RequestParam("attentionId") Integer attentionId);
 }
