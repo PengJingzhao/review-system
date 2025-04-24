@@ -19,6 +19,7 @@
         <module>common</module>
         <module>count-service</module>
         <module>media-service</module>
+        <module>content-service</module>
     </modules>
 
     <!-- Java版本 -->
