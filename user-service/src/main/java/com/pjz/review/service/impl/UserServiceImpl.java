@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.http.HttpRequest;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,6 +33,8 @@ import static com.pjz.review.util.RedisConstants.*;
 import com.pjz.review.mapper.AttentionMapper;
 import com.pjz.review.common.entity.Attention;
 import com.pjz.review.common.entity.Follower;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 @Slf4j
 @Service
@@ -110,7 +114,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserVO getUser(Integer userId) {
+    public UserVO getUser(String token) {
+//        System.out.println(token);
+
+        String userVOKey = LOGIN_TOKEN_KEY + token;
+
+        String result = (String) stringRedisTemplate.opsForHash().get(userVOKey, "id");
+        assert result != null;
+        Integer userId = Integer.valueOf(result);
+        System.out.println(Integer.valueOf(result));
+        System.out.println(result);
 
         UserVO userVO;
 
@@ -189,5 +202,14 @@ public class UserServiceImpl implements UserService {
         followerMapper.addFollower(follower);
 
 
+    }
+
+    @Override
+    public UserVO getUserDetail(String token) {
+        String userVOKey = LOGIN_TOKEN_KEY + token;
+
+        Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(userVOKey);
+        System.out.println(map);
+        return null;
     }
 }

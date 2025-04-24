@@ -36,7 +36,8 @@ dubbo:
     register-mode: instance
   protocol:
     name: tri
-    port: 20880
+    port: -1
+    host: 10.44.73.69
   registry:
     id: nacos-registry
     address: nacos://10.21.32.95:30000
