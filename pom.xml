@@ -18,6 +18,7 @@
         <module>voucher-service</module>
         <module>common</module>
         <module>count-service</module>
+        <module>media-service</module>
     </modules>
 
     <!-- Java版本 -->
