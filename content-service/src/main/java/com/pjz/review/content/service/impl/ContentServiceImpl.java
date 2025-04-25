@@ -10,6 +10,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,10 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Content createContent(Content content,String token) {
-        UserVO user = userService.getUser(token);
-        System.out.println(user);
-        Integer userId = user.getId();
-        content.setUserId(Long.valueOf(userId));
+    public Content createContent(Content content, String token) {
+        content.setUserId(Long.valueOf(userService.getUser(token).getId()))
+                .setCreatedAt(LocalDateTime.now())
+                .setUpdatedAt(LocalDateTime.now());
         contentMapper.insert(content);
         return content;
     }
@@ -54,11 +54,11 @@ public class ContentServiceImpl implements ContentService {
         if (content == null) {
             throw new RuntimeException("Content not found");
         }
-        content.setTextContent(updatedContent.getTextContent());
-        content.setMediaUrls(updatedContent.getMediaUrls());
-        content.setTags(updatedContent.getTags());
-        content.setLocation(updatedContent.getLocation());
-        content.setStatus(updatedContent.getStatus());
+        content.setTextContent(updatedContent.getTextContent())
+                .setMediaUrls(updatedContent.getMediaUrls())
+                .setTags(updatedContent.getTags())
+                .setLocation(updatedContent.getLocation())
+                .setStatus(updatedContent.getStatus());
 
         contentMapper.updateById(content);
         return content;

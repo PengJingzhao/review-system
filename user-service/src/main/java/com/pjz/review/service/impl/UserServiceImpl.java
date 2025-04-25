@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO getUser(String token) {
-//        System.out.println(token);
+        System.out.println("user-service" + token);
 
         String userVOKey = LOGIN_TOKEN_KEY + token;
 
