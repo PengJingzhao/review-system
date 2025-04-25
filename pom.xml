@@ -20,6 +20,7 @@
         <module>count-service</module>
         <module>media-service</module>
         <module>content-service</module>
+        <module>file-service</module>
     </modules>
 
     <!-- Java版本 -->

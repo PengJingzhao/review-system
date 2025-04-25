@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>user-service</artifactId>
+    <artifactId>file-service</artifactId>
 
     <dependencies>
 
@@ -79,17 +79,24 @@
             <version>1.0.0</version>
         </dependency>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.redisson/redisson &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.redisson</groupId>-->
-<!--            <artifactId>redisson</artifactId>-->
-<!--            <version>3.45.0</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.redisson/redisson &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.redisson</groupId>-->
+        <!--            <artifactId>redisson</artifactId>-->
+        <!--            <version>3.45.0</version>-->
+        <!--        </dependency>-->
 
+        <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.5.11</version>
+        </dependency>
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
             <version>8.5.17</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
