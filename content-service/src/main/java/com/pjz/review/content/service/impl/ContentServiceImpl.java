@@ -2,12 +2,14 @@ package com.pjz.review.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pjz.review.common.entity.po.UserContentRelation;
 import com.pjz.review.common.entity.vo.ContentDetailVO;
 import com.pjz.review.common.entity.vo.ContentVO;
 import com.pjz.review.common.entity.vo.PageVO;
 import com.pjz.review.common.entity.vo.UserVO;
 import com.pjz.review.common.service.ContentService;
 import com.pjz.review.common.service.RelationService;
+import com.pjz.review.common.service.UserContentRelationService;
 import com.pjz.review.common.service.UserService;
 import com.pjz.review.content.mapper.ContentMapper;
 import com.pjz.review.common.entity.po.Content;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +34,9 @@ public class ContentServiceImpl implements ContentService {
     @DubboReference
     private RelationService relationService;
 
-    @DubboReference
-    private ContentService contentService;
+
+    @Resource
+    private UserContentRelationService userContentRelationService;
 
     private final ContentMapper contentMapper;
 
@@ -42,7 +46,7 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public Content createContent(Content content, String token) {
-        content.setUserId(Long.valueOf(userService.getUser(token).getId()))
+        content.setUserId(userService.getUser(token).getId())
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now());
         contentMapper.insert(content);
@@ -101,7 +105,7 @@ public class ContentServiceImpl implements ContentService {
     public PageVO<ContentVO> getSelfFollowerFeed(String token, Long current, Long size) {
 
         UserVO user = userService.getUser(token);
-        Integer userId = user.getId();
+        Long userId = user.getId();
 
         List<Integer> attentionList = relationService.getAttentionList(userId);
 
@@ -128,7 +132,13 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public boolean like(Long contentId, String token) {
 
+        UserContentRelation relation = UserContentRelation.builder()
+                .contentId(contentId)
+                .userId(userService.getUser(token).getId())
+                .relationType("LIKE")
+                .build();
 
+        userContentRelationService.addRelation(relation);
 
         return false;
     }

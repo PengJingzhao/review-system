@@ -10,11 +10,11 @@ import java.util.List;
 @RequestMapping("/api/user/relation")
 public interface RelationService {
 
-    List<UserVO> getFollowerList(Integer userId, Integer type, Integer start, Integer stop);
+    List<UserVO> getFollowerList(Long userId, Integer type, Integer start, Integer stop);
 
-    List<Integer> getAttentionList(Integer userId);
+    List<Integer> getAttentionList(Long userId);
 
 
-    boolean isAttention(Integer userId, Integer attentionId);
+    boolean isAttention(Long userId, Long attentionId);
 
 }

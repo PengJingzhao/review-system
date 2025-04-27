@@ -30,7 +30,7 @@ public class RelationServiceImpl implements RelationService {
 
 
     @Override
-    public List<UserVO> getFollowerList(Integer userId, Integer type, Integer start, Integer stop) {
+    public List<UserVO> getFollowerList(Long userId, Integer type, Integer start, Integer stop) {
         // 校验当前用户是否有权查询
 
         // 区分是查询本人的还是查询其他用户的
@@ -44,7 +44,7 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public List<Integer> getAttentionList(Integer userId) {
+    public List<Integer> getAttentionList(Long userId) {
 
 
         List<Integer> followedUserIds = attentionMapper.getFollowedUserIds(userId);
@@ -53,12 +53,12 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public boolean isAttention(Integer userId, Integer attentionId) {
+    public boolean isAttention(Long userId, Long attentionId) {
 
         return attentionMapper.isAttention(userId,attentionId);
     }
 
-    private List<UserVO> oneself(Integer userId, int type, Integer start, Integer stop) {
+    private List<UserVO> oneself(Long userId, int type, Integer start, Integer stop) {
         if (type == 0) {
             // 并发量小，可以直接从数据库里面查询
             List<Integer> userIdList = followerMapper.getFollowerIds(userId, start, stop);
@@ -74,7 +74,7 @@ public class RelationServiceImpl implements RelationService {
         }
     }
 
-    private List<UserVO> other(Integer userId, Integer type, Integer start, Integer stop) {
+    private List<UserVO> other(Long userId, Integer type, Integer start, Integer stop) {
         if (type == 0) {
             // 先到缓存里面查询用户id列表
             List<String> userIds = stringRedisTemplate.opsForList().range("user:follower:list" + userId, start, stop);

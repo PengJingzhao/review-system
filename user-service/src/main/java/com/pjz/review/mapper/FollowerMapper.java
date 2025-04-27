@@ -23,7 +23,7 @@ public interface FollowerMapper extends BaseMapper<Follower> {
         insert(follower);
     }
 
-    default List<Integer> getFollowerIds(Integer userId,Integer start,Integer stop) {
+    default List<Integer> getFollowerIds(Long userId,Integer start,Integer stop) {
         Page<Follower> page = Page.of(start, stop - start);
 
         LambdaQueryWrapper<Follower> wrapper = new LambdaQueryWrapper<>();

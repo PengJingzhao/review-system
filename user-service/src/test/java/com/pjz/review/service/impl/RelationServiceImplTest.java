@@ -60,7 +60,7 @@ class RelationServiceImplTest {
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
         when(stringRedisTemplate.opsForList()).thenReturn(listOperations);
         // 准备测试数据
-        Integer userId = 1;
+        Long userId = 1L;
         Integer type = 0; // 查询其他用户
         Integer start = 0;
         Integer stop = 10;
@@ -83,7 +83,7 @@ class RelationServiceImplTest {
             // 为每个JSON字符串配置转换结果
             for (int i = 0; i < userJsonList.size(); i++) {
                 UserVO userVO = new UserVO();
-                userVO.setId(i + 2);
+                userVO.setId((long) (i + 2));
                 userVO.setName("user" + (i + 2));
 
                 int finalI = i;
@@ -116,7 +116,7 @@ class RelationServiceImplTest {
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
         when(stringRedisTemplate.opsForList()).thenReturn(listOperations);
         // 准备测试数据
-        Integer userId = 1;
+        Long userId = 1L;
         Integer type = 0; // 查询其他用户
         Integer start = 0;
         Integer stop = 10;
@@ -127,7 +127,7 @@ class RelationServiceImplTest {
 
         // 模拟数据库查询结果
         List<Integer> followerIds = Arrays.asList(2, 3, 4);
-        when(followerMapper.getFollowerIds(userId, start, stop)).thenReturn(followerIds);
+        when(followerMapper.getFollowerIds(Long.valueOf(userId), start, stop)).thenReturn(followerIds);
 
         // 转换为字符串ID列表
         List<String> stringUserIds = followerIds.stream()
@@ -146,7 +146,7 @@ class RelationServiceImplTest {
         try (MockedStatic<JSONUtil> jsonUtilMock = mockStatic(JSONUtil.class)) {
             for (int i = 0; i < userJsonList.size(); i++) {
                 UserVO userVO = new UserVO();
-                userVO.setId(i + 2);
+                userVO.setId((long) (i + 2));
                 userVO.setName("user" + (i + 2));
 
                 int finalI = i;
@@ -179,7 +179,7 @@ class RelationServiceImplTest {
         // 配置StringRedisTemplate返回的操作对象
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
         // 准备测试数据
-        Integer userId = 1;
+        Long userId = 1L;
         Integer type = 1; // 查询本人
         Integer start = 0;
         Integer stop = 10;
@@ -205,7 +205,7 @@ class RelationServiceImplTest {
         try (MockedStatic<JSONUtil> jsonUtilMock = mockStatic(JSONUtil.class)) {
             for (int i = 0; i < userJsonList.size(); i++) {
                 UserVO userVO = new UserVO();
-                userVO.setId(i + 2);
+                userVO.setId((long) (i + 2));
                 userVO.setName("user" + (i + 2));
 
                 int finalI = i;
@@ -238,7 +238,7 @@ class RelationServiceImplTest {
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
         when(stringRedisTemplate.opsForList()).thenReturn(listOperations);
         // 准备测试数据
-        Integer userId = 1;
+        Long userId = 1L;
         Integer type = 0; // 查询其他用户
         Integer start = 0;
         Integer stop = 10;
@@ -274,7 +274,7 @@ class RelationServiceImplTest {
         // 配置StringRedisTemplate返回的操作对象
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
         // 准备测试数据
-        Integer userId = 1;
+        Long userId = 1L;
         Integer type = 1; // 查询本人
         Integer start = 0;
         Integer stop = 10;

@@ -19,7 +19,7 @@ import java.util.List;
 @Mapper
 public interface ContentMapper extends BaseMapper<Content> {
 
-    default Page<Content> selectByUserId(Integer userId, Long current, Long size) {
+    default Page<Content> selectByUserId(Long userId, Long current, Long size) {
         long pageNum = (current != null && current > 0) ? current : 1;
         long pageSize = (size != null && size > 0) ? size : 10;
 
@@ -32,7 +32,7 @@ public interface ContentMapper extends BaseMapper<Content> {
         return this.selectPage(page, queryWrapper);
     }
 
-    default Page<Content> selectFeedByUserId(Integer userId, Long current, Long size, List<Integer> followedUserIds) {
+    default Page<Content> selectFeedByUserId(Long userId, Long current, Long size, List<Integer> followedUserIds) {
         long pageNum = (current != null && current > 0) ? current : 1;
         long pageSize = (size != null && size > 0) ? size : 10;
 

@@ -3,12 +3,14 @@ package com.pjz.review.common.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
 @TableName("user_content_relation")
+@Builder
 public class UserContentRelation {
 
     @TableId(type = IdType.AUTO)

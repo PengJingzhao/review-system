@@ -22,7 +22,7 @@ public interface AttentionMapper extends BaseMapper<Attention> {
         insert(attention);
     }
 
-    default List<Integer> getFollowedUserIds(Integer userId) {
+    default List<Integer> getFollowedUserIds(Long userId) {
         LambdaQueryWrapper<Attention> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Attention::getAttentionId)   // 只查询followedUserId字段
                 .eq(Attention::getUserId, userId);   // 条件 user_id = ?
@@ -32,7 +32,7 @@ public interface AttentionMapper extends BaseMapper<Attention> {
         return objList.stream().map(o -> (Integer) o).toList();
     }
 
-    default boolean isAttention(Integer userId, Integer attentionId) {
+    default boolean isAttention(Long userId, Long attentionId) {
         LambdaQueryWrapper<Attention> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Attention::getUserId, userId)
                 .eq(Attention::getAttentionId, attentionId);
