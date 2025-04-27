@@ -115,10 +115,10 @@ class UserServiceImplTest {
         user.setPassword("password");
         user.setAttentionCount(0);
         user.setFollowerCount(0);
-        when(mockUserMapper.getUserById(0)).thenReturn(user);
+        when(mockUserMapper.getUserById(0L)).thenReturn(user);
 
         // Run the test
-        final UserVO result = userServiceImplUnderTest.getUser(0);
+        final UserVO result = userServiceImplUnderTest.getUser(String.valueOf(0));
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
@@ -128,10 +128,10 @@ class UserServiceImplTest {
     void testGetUser_UserMapperReturnsNull() {
         // Setup
         when(mockStringRedisTemplate.opsForValue()).thenReturn(null);
-        when(mockUserMapper.getUserById(0)).thenReturn(null);
+        when(mockUserMapper.getUserById(0L)).thenReturn(null);
 
         // Run the test
-        final UserVO result = userServiceImplUnderTest.getUser(0);
+        final UserVO result = userServiceImplUnderTest.getUser(String.valueOf(0));
 
         // Verify the results
         assertThat(result).isNull();

@@ -26,4 +26,6 @@ public interface UserService {
 
 //    @GetMapping
     UserVO getUserDetail(@RequestHeader("authorization") String token);
+
+    UserVO getUserById(Long userId);
 }

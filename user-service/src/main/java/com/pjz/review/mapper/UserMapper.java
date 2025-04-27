@@ -36,7 +36,7 @@ public interface UserMapper extends BaseMapper<User> {
         return user;
     }
 
-    default User getUserById(Integer userId) {
+    default User getUserById(Long userId) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getId, userId);
         return selectOne(wrapper);

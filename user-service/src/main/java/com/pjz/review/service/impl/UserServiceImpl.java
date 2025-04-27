@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //数据库
-        User user = userMapper.getUserById(userId);
+        User user = userMapper.getUserById(Long.valueOf(userId));
 
         if (user == null) {
             // 注意不存在的时候要解决缓存穿透的问题
@@ -211,5 +211,13 @@ public class UserServiceImpl implements UserService {
         Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(userVOKey);
         System.out.println(map);
         return null;
+    }
+
+    @Override
+    public UserVO getUserById(Long userId) {
+        User user = userMapper.getUserById(userId);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
     }
 }

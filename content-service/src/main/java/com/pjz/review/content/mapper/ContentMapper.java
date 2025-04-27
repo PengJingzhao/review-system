@@ -43,4 +43,10 @@ public interface ContentMapper extends BaseMapper<Content> {
 
         return this.selectPage(page, queryWrapper);
     }
+
+    default Content getContentById(Long contentId) {
+        LambdaQueryWrapper<Content> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Content::getId, contentId);
+        return selectOne(wrapper);
+    }
 }

@@ -2,6 +2,8 @@ package com.pjz.review.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pjz.review.common.entity.User;
+import com.pjz.review.common.entity.vo.ContentDetailVO;
 import com.pjz.review.common.entity.vo.ContentVO;
 import com.pjz.review.common.entity.vo.PageVO;
 import com.pjz.review.common.entity.vo.UserVO;
@@ -105,6 +107,20 @@ public class ContentServiceImpl implements ContentService {
         Page<Content> contentPage = contentMapper.selectFeedByUserId(userId, current, size, attentionList);
 
         return getContentVOPageVO(user, contentPage);
+    }
+
+    @Override
+    public ContentDetailVO getContentDetail(Long contentId) {
+        Content content = contentMapper.getContentById(contentId);
+        ContentDetailVO contentDetailVO = new ContentDetailVO();
+        BeanUtils.copyProperties(content, contentDetailVO);
+
+        System.out.println(content.getUserId());
+        UserVO user = userService.getUserById(content.getUserId());
+        contentDetailVO.setUser(user);
+        System.out.println(contentDetailVO);
+
+        return contentDetailVO;
     }
 
     @NotNull
