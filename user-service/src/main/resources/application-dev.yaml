@@ -38,6 +38,7 @@ dubbo:
     name: tri
     port: 50051
     host: 10.24.3.189
+    serialization: fastjson2
   registry:
     id: nacos-registry
     address: nacos://10.21.32.95:30000
