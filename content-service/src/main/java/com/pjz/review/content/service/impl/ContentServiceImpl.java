@@ -31,6 +31,9 @@ public class ContentServiceImpl implements ContentService {
     @DubboReference
     private RelationService relationService;
 
+    @DubboReference
+    private ContentService contentService;
+
     private final ContentMapper contentMapper;
 
     public ContentServiceImpl(ContentMapper contentMapper) {
@@ -120,6 +123,14 @@ public class ContentServiceImpl implements ContentService {
         user.setAttention(relationService.isAttention(self.getId(), user.getId()));
 
         return contentDetailVO;
+    }
+
+    @Override
+    public boolean like(Long contentId, String token) {
+
+
+
+        return false;
     }
 
     @NotNull
