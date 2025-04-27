@@ -1,6 +1,8 @@
 package com.pjz.review.common.service;
 
 import com.pjz.review.common.entity.Content;
+import com.pjz.review.common.entity.vo.ContentVO;
+import com.pjz.review.common.entity.vo.PageVO;
 import com.pjz.review.common.entity.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,4 +28,19 @@ public interface ContentService {
 
     @DeleteMapping("/deleteContent/{id}")
     void deleteContent(@PathVariable("id") Long id);
+
+    @GetMapping("/getSelfPosts")
+    PageVO<ContentVO> getSelfPosts(@RequestHeader("authorization") String token,
+                                   @RequestParam("current") Long current,
+                                   @RequestParam("size") Long size);
+
+    @GetMapping("/getUserPosts/{userId}")
+    PageVO<ContentVO> getUserPosts(
+            @PathVariable("userId") Long userId
+    );
+
+    @GetMapping("/getSelfFollowerFeed")
+    PageVO<ContentVO> getSelfFollowerFeed(@RequestHeader("authorization") String token,
+                                          @RequestParam("current") Long current,
+                                          @RequestParam("size") Long size);
 }

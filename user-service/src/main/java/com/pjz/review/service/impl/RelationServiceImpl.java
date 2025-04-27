@@ -3,6 +3,7 @@ package com.pjz.review.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.pjz.review.common.entity.vo.UserVO;
 import com.pjz.review.common.service.RelationService;
+import com.pjz.review.mapper.AttentionMapper;
 import com.pjz.review.mapper.FollowerMapper;
 import com.pjz.review.mapper.UserMapper;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -24,6 +25,10 @@ public class RelationServiceImpl implements RelationService {
     @Resource
     private FollowerMapper followerMapper;
 
+    @Resource
+    private AttentionMapper attentionMapper;
+
+
     @Override
     public List<UserVO> getFollowerList(Integer userId, Integer type, Integer start, Integer stop) {
         // 校验当前用户是否有权查询
@@ -36,6 +41,15 @@ public class RelationServiceImpl implements RelationService {
             // 查询本人的
             return oneself(userId, 0, start, stop);
         }
+    }
+
+    @Override
+    public List<Integer> getAttentionList(Integer userId) {
+
+
+        List<Integer> followedUserIds = attentionMapper.getFollowedUserIds(userId);
+
+        return followedUserIds;
     }
 
     private List<UserVO> oneself(Integer userId, int type, Integer start, Integer stop) {

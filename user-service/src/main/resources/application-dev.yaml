@@ -37,7 +37,7 @@ dubbo:
   protocol:
     name: tri
     port: 50051
-    host: 10.44.73.69
+    host: 10.24.3.189
   registry:
     id: nacos-registry
     address: nacos://10.21.32.95:30000
