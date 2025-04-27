@@ -2,7 +2,7 @@ package com.pjz.review.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import com.pjz.review.common.entity.Voucher;
+import com.pjz.review.common.entity.po.Voucher;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

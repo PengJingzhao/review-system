@@ -2,8 +2,8 @@ package com.pjz.review.utils;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.json.JSONUtil;
-import com.pjz.review.common.entity.RedisData;
-import com.pjz.review.common.entity.Shops;
+import com.pjz.review.common.entity.po.RedisData;
+import com.pjz.review.common.entity.po.Shops;
 import com.pjz.review.mapper.ShopsMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

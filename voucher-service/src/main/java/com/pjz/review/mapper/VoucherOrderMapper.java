@@ -3,7 +3,7 @@ package com.pjz.review.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import com.pjz.review.common.entity.VoucherOrder;
+import com.pjz.review.common.entity.po.VoucherOrder;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

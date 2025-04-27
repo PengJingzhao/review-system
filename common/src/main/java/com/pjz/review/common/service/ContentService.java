@@ -1,12 +1,9 @@
 package com.pjz.review.common.service;
 
-import com.pjz.review.common.entity.Content;
+import com.pjz.review.common.entity.po.Content;
 import com.pjz.review.common.entity.vo.ContentDetailVO;
 import com.pjz.review.common.entity.vo.ContentVO;
 import com.pjz.review.common.entity.vo.PageVO;
-import com.pjz.review.common.entity.vo.UserVO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +44,6 @@ public interface ContentService {
 
 
     @GetMapping("/getContentDetail/{contentId}")
-    ContentDetailVO getContentDetail(@PathVariable("contentId") Long contentId);
+    ContentDetailVO getContentDetail(@PathVariable("contentId") Long contentId, @RequestHeader("authorization") String token);
 
 }

@@ -1,6 +1,5 @@
-package com.pjz.review.common.entity;
+package com.pjz.review.common.entity.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -20,8 +19,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("attention")
-public class Attention implements Serializable {
+@TableName("follower")
+public class Follower implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,14 +33,12 @@ public class Attention implements Serializable {
     /**
      * 用户id
      */
-    @TableField("user_id")
     private Integer userId;
 
     /**
-     * 关注用户id
+     * 粉丝id
      */
-    @TableField("attention_id")
-    private Integer attentionId;
+    private Integer followerId;
 
 
 }

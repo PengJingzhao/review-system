@@ -3,11 +3,10 @@ package com.pjz.review.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.common.entity.User;
+import com.pjz.review.common.entity.po.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 /**

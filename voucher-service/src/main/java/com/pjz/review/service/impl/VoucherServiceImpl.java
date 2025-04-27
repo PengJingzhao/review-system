@@ -1,9 +1,9 @@
 package com.pjz.review.service.impl;
 
 
-import com.pjz.review.common.entity.SeckillVoucher;
-import com.pjz.review.common.entity.Voucher;
-import com.pjz.review.common.entity.VoucherOrder;
+import com.pjz.review.common.entity.po.SeckillVoucher;
+import com.pjz.review.common.entity.po.Voucher;
+import com.pjz.review.common.entity.po.VoucherOrder;
 import com.pjz.review.common.entity.bo.VoucherBO;
 import com.pjz.review.common.service.VoucherService;
 import com.pjz.review.mapper.SeckillVoucherMapper;

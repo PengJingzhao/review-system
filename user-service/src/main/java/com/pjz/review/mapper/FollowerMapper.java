@@ -3,11 +3,10 @@ package com.pjz.review.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.pjz.review.common.entity.Follower;
+import com.pjz.review.common.entity.po.Follower;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * <p>

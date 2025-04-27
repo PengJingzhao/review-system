@@ -1,4 +1,4 @@
-package com.pjz.review.common.entity;
+package com.pjz.review.common.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -14,31 +14,24 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author pjz
- * @since 2025-04-08
+ * @since 2025-04-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("follower")
-public class Follower implements Serializable {
+@TableName("counter")
+public class Counter implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键id
-     */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
-    /**
-     * 用户id
-     */
-    private Integer userId;
+    private Long postId;
 
-    /**
-     * 粉丝id
-     */
-    private Integer followerId;
+    private String countKey;
+
+    private Integer countValue;
 
 
 }

@@ -1,13 +1,9 @@
 package com.pjz.review.common.service;
 
 
-import com.pjz.review.common.entity.User;
 import com.pjz.review.common.entity.dto.LoginFormDTO;
 import com.pjz.review.common.entity.vo.UserVO;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.net.http.HttpRequest;
 
 @RequestMapping("/api/user")
 public interface UserService {

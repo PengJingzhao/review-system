@@ -52,6 +52,12 @@ public class RelationServiceImpl implements RelationService {
         return followedUserIds;
     }
 
+    @Override
+    public boolean isAttention(Integer userId, Integer attentionId) {
+
+        return attentionMapper.isAttention(userId,attentionId);
+    }
+
     private List<UserVO> oneself(Integer userId, int type, Integer start, Integer stop) {
         if (type == 0) {
             // 并发量小，可以直接从数据库里面查询

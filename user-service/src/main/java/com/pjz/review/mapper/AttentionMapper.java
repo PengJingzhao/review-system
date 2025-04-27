@@ -2,9 +2,8 @@ package com.pjz.review.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.common.entity.User;
 import org.apache.ibatis.annotations.Mapper;
-import com.pjz.review.common.entity.Attention;
+import com.pjz.review.common.entity.po.Attention;
 
 import java.util.List;
 
@@ -31,5 +30,12 @@ public interface AttentionMapper extends BaseMapper<Attention> {
         List<Object> objList = this.selectObjs(queryWrapper);
         // 转成List<Integer>
         return objList.stream().map(o -> (Integer) o).toList();
+    }
+
+    default boolean isAttention(Integer userId, Integer attentionId) {
+        LambdaQueryWrapper<Attention> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Attention::getUserId, userId)
+                .eq(Attention::getAttentionId, attentionId);
+        return selectCount(wrapper) > 0;
     }
 }

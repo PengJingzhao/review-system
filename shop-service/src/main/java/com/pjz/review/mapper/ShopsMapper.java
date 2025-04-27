@@ -2,7 +2,7 @@ package com.pjz.review.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.common.entity.Shops;
+import com.pjz.review.common.entity.po.Shops;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

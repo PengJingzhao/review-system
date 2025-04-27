@@ -1,7 +1,7 @@
 package com.pjz.review.utils;
 
 import cn.hutool.json.JSONUtil;
-import com.pjz.review.common.entity.RedisData;
+import com.pjz.review.common.entity.po.RedisData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

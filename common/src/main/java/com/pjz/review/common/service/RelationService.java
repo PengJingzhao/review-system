@@ -14,4 +14,7 @@ public interface RelationService {
 
     List<Integer> getAttentionList(Integer userId);
 
+
+    boolean isAttention(Integer userId, Integer attentionId);
+
 }

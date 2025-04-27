@@ -1,7 +1,7 @@
 package com.pjz.review.common.service;
 
 
-import com.pjz.review.common.entity.SeckillVoucher;
+import com.pjz.review.common.entity.po.SeckillVoucher;
 import com.pjz.review.common.entity.bo.VoucherBO;
 
 public interface VoucherService {

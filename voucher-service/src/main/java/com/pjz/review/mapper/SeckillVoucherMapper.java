@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import com.pjz.review.common.entity.SeckillVoucher;
+import com.pjz.review.common.entity.po.SeckillVoucher;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

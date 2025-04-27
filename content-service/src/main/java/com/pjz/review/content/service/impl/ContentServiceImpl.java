@@ -2,7 +2,6 @@ package com.pjz.review.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.pjz.review.common.entity.User;
 import com.pjz.review.common.entity.vo.ContentDetailVO;
 import com.pjz.review.common.entity.vo.ContentVO;
 import com.pjz.review.common.entity.vo.PageVO;
@@ -11,7 +10,7 @@ import com.pjz.review.common.service.ContentService;
 import com.pjz.review.common.service.RelationService;
 import com.pjz.review.common.service.UserService;
 import com.pjz.review.content.mapper.ContentMapper;
-import com.pjz.review.common.entity.Content;
+import com.pjz.review.common.entity.po.Content;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 @DubboService
@@ -110,15 +108,16 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public ContentDetailVO getContentDetail(Long contentId) {
+    public ContentDetailVO getContentDetail(Long contentId, String token) {
+        UserVO self = userService.getUser(token);
+
         Content content = contentMapper.getContentById(contentId);
         ContentDetailVO contentDetailVO = new ContentDetailVO();
         BeanUtils.copyProperties(content, contentDetailVO);
 
-        System.out.println(content.getUserId());
         UserVO user = userService.getUserById(content.getUserId());
         contentDetailVO.setUser(user);
-        System.out.println(contentDetailVO);
+        user.setAttention(relationService.isAttention(self.getId(), user.getId()));
 
         return contentDetailVO;
     }

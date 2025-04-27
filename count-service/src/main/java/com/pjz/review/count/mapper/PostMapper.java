@@ -1,7 +1,7 @@
 package com.pjz.review.count.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.pjz.review.common.entity.Post;
+import com.pjz.review.common.entity.po.Post;
 
 /**
  * <p>

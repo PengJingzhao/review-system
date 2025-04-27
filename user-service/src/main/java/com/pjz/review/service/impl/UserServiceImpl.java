@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.json.JSONUtil;
 import com.pjz.commons.utils.ValidatorUtil;
-import com.pjz.review.common.entity.User;
+import com.pjz.review.common.entity.po.User;
 import com.pjz.review.common.entity.dto.LoginFormDTO;
 import com.pjz.review.common.entity.vo.UserVO;
 import com.pjz.review.mapper.FollowerMapper;
@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.net.http.HttpRequest;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,10 +28,8 @@ import static com.pjz.review.util.ExceptionConstants.PHONE_FORMAT_NOT_CORRECT;
 import static com.pjz.review.util.RedisConstants.*;
 
 import com.pjz.review.mapper.AttentionMapper;
-import com.pjz.review.common.entity.Attention;
-import com.pjz.review.common.entity.Follower;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
+import com.pjz.review.common.entity.po.Attention;
+import com.pjz.review.common.entity.po.Follower;
 
 @Slf4j
 @Service
@@ -209,7 +204,7 @@ public class UserServiceImpl implements UserService {
         String userVOKey = LOGIN_TOKEN_KEY + token;
 
         Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(userVOKey);
-        System.out.println(map);
+
         return null;
     }
 

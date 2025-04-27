@@ -1,6 +1,6 @@
 package com.pjz.review.media.service;
 
-import com.pjz.review.common.entity.MediaFile;
+import com.pjz.review.common.entity.po.MediaFile;
 import com.pjz.review.common.service.MediaService;
 import com.pjz.review.media.mapper.MediaFileMapper;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

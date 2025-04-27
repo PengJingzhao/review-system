@@ -1,8 +1,8 @@
 package com.pjz.review.service.impl;
 
-import com.pjz.review.common.entity.Attention;
-import com.pjz.review.common.entity.Follower;
-import com.pjz.review.common.entity.User;
+import com.pjz.review.common.entity.po.Attention;
+import com.pjz.review.common.entity.po.Follower;
+import com.pjz.review.common.entity.po.User;
 import com.pjz.review.common.entity.dto.LoginFormDTO;
 import com.pjz.review.common.entity.vo.UserVO;
 import com.pjz.review.mapper.AttentionMapper;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

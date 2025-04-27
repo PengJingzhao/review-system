@@ -1,4 +1,4 @@
-package com.pjz.review.common.entity;
+package com.pjz.review.common.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
