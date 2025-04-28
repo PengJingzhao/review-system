@@ -29,18 +29,24 @@ spring:
     port: 6379
     host: localhost
   application:
-    name: user-service
+    name: count-service
+mybatis-plus:
+  configuration:
+    # 关闭控制台打印日志
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 dubbo:
   application:
-    name: ${spring.application.name}
+    name: count-service
     register-mode: instance
   protocol:
     name: tri
-    port: -1
+    port: 50054
+    host: 10.24.3.189
+    serialization: fastjson2
   registry:
     id: nacos-registry
-    address: nacos://127.0.0.1:8848
+    address: nacos://10.21.32.95:30000
   config-center:
-    address: nacos://127.0.0.1:8848
+    address: nacos://10.21.32.95:30000
   metadata-report:
-    address: nacos://127.0.0.1:8848
+    address: nacos://10.21.32.95:30000

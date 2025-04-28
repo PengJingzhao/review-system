@@ -8,6 +8,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,6 +16,9 @@ import java.util.List;
 public class UserContentRelationServiceImpl
         extends ServiceImpl<UserContentRelationMapper, UserContentRelation>
         implements UserContentRelationService {
+
+    @Resource
+    private UserContentRelationMapper userContentRelationMapper;
 
     @Override
     @Transactional
@@ -55,5 +59,10 @@ public class UserContentRelationServiceImpl
         return baseMapper.selectList(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<UserContentRelation>()
                 .eq(UserContentRelation::getContentId, contentId)
                 .eq(UserContentRelation::getRelationType, relationType));
+    }
+
+    @Override
+    public boolean relationExists(Long userId, Long contentId, String relationType) {
+        return userContentRelationMapper.relationExists(userId,contentId,relationType);
     }
 }

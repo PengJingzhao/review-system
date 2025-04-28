@@ -2,22 +2,24 @@ package com.pjz.review.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pjz.commons.constants.CountConstants;
+import com.pjz.commons.constants.UserContentRelationConstants;
+import com.pjz.review.common.entity.po.BizCount;
 import com.pjz.review.common.entity.po.UserContentRelation;
 import com.pjz.review.common.entity.vo.ContentDetailVO;
 import com.pjz.review.common.entity.vo.ContentVO;
 import com.pjz.review.common.entity.vo.PageVO;
 import com.pjz.review.common.entity.vo.UserVO;
-import com.pjz.review.common.service.ContentService;
-import com.pjz.review.common.service.RelationService;
-import com.pjz.review.common.service.UserContentRelationService;
-import com.pjz.review.common.service.UserService;
+import com.pjz.review.common.service.*;
 import com.pjz.review.content.mapper.ContentMapper;
 import com.pjz.review.common.entity.po.Content;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ import java.util.Optional;
 
 @Service
 @DubboService
+@Slf4j
 public class ContentServiceImpl implements ContentService {
 
     @DubboReference
@@ -34,6 +37,8 @@ public class ContentServiceImpl implements ContentService {
     @DubboReference
     private RelationService relationService;
 
+    @DubboReference
+    private BizCountService countService;
 
     @Resource
     private UserContentRelationService userContentRelationService;
@@ -130,17 +135,36 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public boolean like(Long contentId, String token) {
+    @Transactional
+    public Long like(Long contentId, String token) {
+
+        Long userId = userService.getUser(token).getId();
+        // 判断是否点过赞了
+        if (userContentRelationService.relationExists(userId, contentId, UserContentRelationConstants.LIKE)) {
+            // 取消点赞
+            userContentRelationService.removeRelation(userId,contentId,UserContentRelationConstants.LIKE);
+
+            // 计数服务增加点赞数
+            countService.incrementCount(CountConstants.BLOG, String.valueOf(contentId), CountConstants.LIKE, -1);
+            // 查询点赞数
+            BizCount count = countService.getCount(CountConstants.BLOG, String.valueOf(contentId), CountConstants.LIKE);
+
+            return count.getCountValue();
+        }
 
         UserContentRelation relation = UserContentRelation.builder()
                 .contentId(contentId)
-                .userId(userService.getUser(token).getId())
-                .relationType("LIKE")
+                .userId(userId)
+                .relationType(UserContentRelationConstants.LIKE)
                 .build();
 
         userContentRelationService.addRelation(relation);
 
-        return false;
+        // 计数服务增加点赞数
+        countService.incrementCount(CountConstants.BLOG, String.valueOf(contentId), CountConstants.LIKE, 1);
+
+        BizCount newCount = countService.getCount(CountConstants.BLOG, String.valueOf(contentId), CountConstants.LIKE);
+        return newCount.getCountValue();
     }
 
     @NotNull

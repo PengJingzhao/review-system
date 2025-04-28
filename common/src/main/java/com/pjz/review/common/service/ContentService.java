@@ -47,6 +47,6 @@ public interface ContentService {
     ContentDetailVO getContentDetail(@PathVariable("contentId") Long contentId, @RequestHeader("authorization") String token);
 
     @PostMapping("/like/{contentId}")
-    boolean like(@PathVariable("contentId") Long contentId, @RequestHeader("authorization") String token);
+    Long like(@PathVariable("contentId") Long contentId, @RequestHeader("authorization") String token);
 
 }

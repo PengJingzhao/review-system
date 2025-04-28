@@ -15,4 +15,6 @@ public interface UserContentRelationService {
     List<UserContentRelation> getRelationsByUser(Long userId, String relationType);
 
     List<UserContentRelation> getRelationsByContent(Long contentId, String relationType);
+
+    boolean relationExists(Long userId, Long contentId, String relationType);
 }

@@ -38,4 +38,12 @@ public interface UserContentRelationMapper extends BaseMapper<UserContentRelatio
                 .eq(UserContentRelation::getRelationType, relationType);
         return delete(update);
     }
+
+    default boolean relationExists(Long userId, Long contentId, String relationType) {
+        LambdaQueryWrapper<UserContentRelation> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserContentRelation::getUserId, userId)
+                .eq(UserContentRelation::getContentId, contentId)
+                .eq(UserContentRelation::getRelationType, relationType);
+        return selectCount(wrapper) > 0;
+    }
 }
