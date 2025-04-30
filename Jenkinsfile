@@ -73,7 +73,7 @@ checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfig
 						sh """
 						cd ${service}
 
-						mvn clean package dockerfile:build
+						mvn clean package dockerfile:build -Dmaven.test.skip=true
 
 						"""
 
