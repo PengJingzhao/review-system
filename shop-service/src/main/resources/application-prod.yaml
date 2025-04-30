@@ -41,7 +41,7 @@ dubbo:
     register-mode: instance
   protocol:
     name: tri
-    port: -1
+    port: 50056
   registry:
     id: nacos-registry
     address: nacos://127.0.0.1:8848
