@@ -37,6 +37,17 @@ checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfig
             }
         }
 
+                // 编译公共模块
+                stage('Compile and Build Common') {
+        			steps {
+        			    script{
+        			        def commonsPath = "./common/pom.xml "
+
+                            sh "mvn -f ${commonsPath} clean install" // 针对公共模块（common）进行编译和打包
+        			    }
+                    }
+                }
+
         // 构建 Docker 镜像
         stage('Build And Deploy') {
 			steps {
