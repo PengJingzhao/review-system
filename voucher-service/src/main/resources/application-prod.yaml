@@ -21,14 +21,44 @@ logging:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review_system?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
+    url: jdbc:mysql://10.21.32.95:13307/review_system_user?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
     username: root
-    password: 2048711712P!
+    password: topview
     type: com.zaxxer.hikari.HikariDataSource
   redis:
     port: 6379
     host: localhost
+  application:
+    name: voucher-service
 mybatis-plus:
   configuration:
     # 关闭控制台打印日志
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+# application.yml 配置示例
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "hawtio,jolokia"
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  health:
+    redis:
+      enabled: false
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://127.0.0.1:8848
+  config-center:
+    address: nacos://127.0.0.1:8848
+  metadata-report:
+    address: nacos://127.0.0.1:8848

@@ -55,8 +55,8 @@ checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfig
 					echo "Building Docker images for all services..."
 
                     // 定义服务模块
-                    def services = [ 'user-service', 'review-service','shop-service']
-                    def ports = [15001,15003,15002]
+                    def services = [ 'file-service','media-service','count-service','voucher-service','user-service', 'review-service','shop-service','content-service']
+                    def ports = [15012,15010,15006,15004,15001,15003,15002,15011]
 
                     def index = 0;
 
