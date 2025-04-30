@@ -26,15 +26,14 @@ spring:
     password: topview
     type: com.zaxxer.hikari.HikariDataSource
   redis:
-    port: 6379
-    host: localhost
+    port: 9905
+    host: 10.21.32.95
   application:
     name: media-service
   cloud:
     nacos:
       discovery:
         server-addr: 10.21.32.95:30000
-        ip: 10.24.3.189
 dubbo:
   application:
     name: media-service-tri
@@ -42,7 +41,6 @@ dubbo:
   protocol:
     name: tri
     port: -1
-    host: 10.24.3.189
   registry:
     id: nacos-registry
     address: nacos://10.21.32.95:30000

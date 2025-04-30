@@ -27,8 +27,8 @@ spring:
     password: topview
     type: com.zaxxer.hikari.HikariDataSource
   redis:
-    port: 6379
-    host: localhost
+    port: 9905
+    host: 10.21.32.95
   application:
     name: shop-service
 mybatis-plus:
