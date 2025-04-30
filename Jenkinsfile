@@ -93,14 +93,14 @@ checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfig
 						docker rmi ${tagName}
 						"""
 
-						sh "echo /app/jenkins/jenkins_shell/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}"
+						sh "echo /app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}"
 
 // 						// 通过ssh远程执行生产服务器上的部署脚本
 						sshPublisher(
 							publishers:
 								[
 									sshPublisherDesc(
-										configName: 'Jenkins_prod', transfers: [sshTransfer(cleanRemote: false, excludes: '',
+										configName: 'Jenkins-prod', transfers: [sshTransfer(cleanRemote: false, excludes: '',
 											execCommand: "/app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
 										)
 								]
