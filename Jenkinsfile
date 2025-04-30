@@ -3,9 +3,9 @@ pipeline {
 
     // 全局环境变量
     environment {
-		HARBOR_URL = "192.168.59.142:9000"           // Harbor 镜像仓库地址
+		HARBOR_URL = "10.21.32.95:9000"           // Harbor 镜像仓库地址
         HARBOR_PROJECT = "review-system"           // Harbor 项目名称
-        DOCKER_CREDENTIALS_ID = "ca805745-dd5d-442b-884b-b3e2294da05e"
+        DOCKER_CREDENTIALS_ID = "a890512a-7d3a-4693-b40f-a37b40df0b33"
         TAG = "latest"
     }
 
@@ -13,14 +13,7 @@ pipeline {
 		// 拉取代码
         stage('Pull Code') {
 			steps {
-				checkout scmGit(
-                    branches: [[name: '*/master']],
-                    extensions: [],
-                    userRemoteConfigs: [[
-                        credentialsId: '3b7daefc-2fa8-4762-850c-5b6deacaea3e',
-                        url: 'git@github.com:PengJingzhao/review-system.git'
-                    ]]
-                )
+checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '8c220f6e-bbf4-449b-b98a-5841d37b334c', url: 'git@github.com:PengJingzhao/review-system.git']])
             }
         }
 
@@ -91,16 +84,16 @@ pipeline {
 
 						sh "echo /app/jenkins/jenkins_shell/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}"
 
-						// 通过ssh远程执行生产服务器上的部署脚本
-						sshPublisher(
-							publishers:
-								[
-									sshPublisherDesc(
-										configName: 'prod_server', transfers: [sshTransfer(cleanRemote: false, excludes: '',
-											execCommand: "/app/jenkins/jenkins_shell/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
-										)
-								]
-						)
+// 						// 通过ssh远程执行生产服务器上的部署脚本
+// 						sshPublisher(
+// 							publishers:
+// 								[
+// 									sshPublisherDesc(
+// 										configName: 'prod_server', transfers: [sshTransfer(cleanRemote: false, excludes: '',
+// 											execCommand: "/app/jenkins/jenkins_shell/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
+// 										)
+// 								]
+// 						)
 
                     }
                 }

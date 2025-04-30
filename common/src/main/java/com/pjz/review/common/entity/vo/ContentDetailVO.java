@@ -34,10 +34,12 @@ public class ContentDetailVO implements Serializable {
 
     private Boolean status;
 
-    private Integer commentCount = 0;
+    private Long commentCount;
 
-    private Integer likeCount = 0;
+    private Long likeCount;
 
-    private Integer collectionCount = 0;
+    private Long collectionCount;
+
+    private Boolean like;
 
 }

@@ -131,6 +131,9 @@ public class ContentServiceImpl implements ContentService {
         contentDetailVO.setUser(user);
         user.setAttention(relationService.isAttention(self.getId(), user.getId()));
 
+        contentDetailVO.setLike(userContentRelationService.relationExists(self.getId(), contentId, UserContentRelationConstants.LIKE));
+        contentDetailVO.setLikeCount(countService.getCount(CountConstants.BLOG, String.valueOf(contentId), CountConstants.LIKE).getCountValue());
+
         return contentDetailVO;
     }
 
@@ -142,7 +145,7 @@ public class ContentServiceImpl implements ContentService {
         // 判断是否点过赞了
         if (userContentRelationService.relationExists(userId, contentId, UserContentRelationConstants.LIKE)) {
             // 取消点赞
-            userContentRelationService.removeRelation(userId,contentId,UserContentRelationConstants.LIKE);
+            userContentRelationService.removeRelation(userId, contentId, UserContentRelationConstants.LIKE);
 
             // 计数服务增加点赞数
             countService.incrementCount(CountConstants.BLOG, String.valueOf(contentId), CountConstants.LIKE, -1);

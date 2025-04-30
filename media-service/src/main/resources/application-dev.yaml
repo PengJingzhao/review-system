@@ -21,9 +21,9 @@ logging:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review_system_media?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://10.21.32.95:13307/review_system_media?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: root
-    password: 2048711712P!
+    password: topview
     type: com.zaxxer.hikari.HikariDataSource
   redis:
     port: 6379
