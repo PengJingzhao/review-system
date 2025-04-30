@@ -1,5 +1,5 @@
 # 使用 OpenJDK 11 基础镜像
-FROM openjdk:11-jdk-slim
+FROM openjdk:17-jdk-slim
 
 ARG JAR_FILE
 
