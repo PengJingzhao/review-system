@@ -28,6 +28,7 @@ spring:
   redis:
     port: 9905
     host: 10.21.32.95
+    password: topview
   application:
     name: content-service
 dubbo:
