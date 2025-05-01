@@ -95,20 +95,60 @@ checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfig
 						docker rmi ${tagName}
 						"""
 
-						sh "echo /app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p} ${p1}"
-
-// 						// 通过ssh远程执行生产服务器上的部署脚本
-						sshPublisher(
-							publishers:
-								[
-									sshPublisherDesc(
-										configName: 'Jenkins-prod', transfers: [sshTransfer(cleanRemote: false, excludes: '',
-											execCommand: "/app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p} ${p1}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
-										)
-								]
-						)
+// 						sh "echo /app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p} ${p1}"
+//
+// // 						// 通过ssh远程执行生产服务器上的部署脚本
+// 						sshPublisher(
+// 							publishers:
+// 								[
+// 									sshPublisherDesc(
+// 										configName: 'Jenkins-prod', transfers: [sshTransfer(cleanRemote: false, excludes: '',
+// 											execCommand: "/app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p} ${p1}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
+// 										)
+// 								]
+// 						)
 
                     }
+                }
+            }
+        }
+
+        stage('Deploy Services'){
+            steps{
+                script{
+                    // 定义服务模块
+                                        def services = [ 'file-service','media-service','count-service','user-service', 'shop-service','content-service']
+                                        def ports = [15012,15010,15006,15001,15002,15011]
+                                        def ports1 = [50052,50055,50054,50051,50056,50053]
+
+                                        def index = 0;
+
+
+                                        // 遍历服务模块，构建每个服务的 Docker 镜像
+                                        for (service in services) {
+
+                    						def imageName = "${service}:${TAG}"
+                    						def tagName = "${HARBOR_URL}/${HARBOR_PROJECT}/${service}:${TAG}"
+                    						def p = ports[index]
+                    						def p1 = ports1[index]
+                    						index = index + 1
+
+
+
+                    						sh "echo /app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p} ${p1}"
+
+                    // 						// 通过ssh远程执行生产服务器上的部署脚本
+                    						sshPublisher(
+                    							publishers:
+                    								[
+                    									sshPublisherDesc(
+                    										configName: 'Jenkins-prod', transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                    											execCommand: "/app/review-system/deploy.sh ${HARBOR_URL} ${HARBOR_PROJECT} ${service} ${TAG} ${p} ${p1}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
+                    										)
+                    								]
+                    						)
+
+                                        }
                 }
             }
         }
