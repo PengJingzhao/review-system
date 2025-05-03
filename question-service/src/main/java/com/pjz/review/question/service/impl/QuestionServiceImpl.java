@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @DubboService
@@ -64,20 +65,20 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Long questionId = question.getId();
         log.info("获得questionId：{}", questionId);
 
-        if (createRequest.getTags() != null && !createRequest.getTags().isEmpty()) {
-            // 批量保存标签
-            List<QuestionTag> tagList = createRequest.getTags().stream()
-                    .filter(tag -> tag != null && !tag.trim().isEmpty())
-                    .map(tag -> QuestionTag.builder()
-                            .questionId(questionId)
-                            .tag(tag.trim())
-                            .build())
-                    .toList();
-
-            // 批量插入标签
-            log.info("插入标签:{}", tagList);
-            tagList.forEach(questionTagMapper::insert);
-        }
+//        if (createRequest.getTags() != null && !createRequest.getTags().isEmpty()) {
+//            // 批量保存标签
+//            List<QuestionTag> tagList = createRequest.getTags().stream()
+//                    .filter(tag -> tag != null && !tag.trim().isEmpty())
+//                    .map(tag -> QuestionTag.builder()
+//                            .questionId(questionId)
+//                            .tag(tag.trim())
+//                            .build())
+//                    .toList();
+//
+//            // 批量插入标签
+//            log.info("插入标签:{}", tagList);
+//            tagList.forEach(questionTagMapper::insert);
+//        }
 
 
         return question;
@@ -106,7 +107,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (!CollectionUtils.isEmpty(params.getTags())) {
             // 先查question_ids 满足标签条件 ——标签表中任一匹配的question_id列表
             QueryWrapper<QuestionTag> tagQuery = new QueryWrapper<>();
-            tagQuery.in("tag", params.getTags());
+            tagQuery.in("tag_id", params.getTags());
             List<QuestionTag> questionTags = questionTagMapper.selectList(tagQuery);
 
             List<Long> questionIds = questionTags.stream()
@@ -140,7 +141,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             questions.forEach(q -> {
                 List<String> relatedTags = allTags.stream()
                         .filter(t -> t.getQuestionId().equals(q.getId()))
-                        .map(QuestionTag::getTag)
+                        .map(questionTag -> tagMapper.selectById(questionTag.getTagId()).getTag())
                         .collect(Collectors.toList());
                 q.setTags(relatedTags);
             });
@@ -160,7 +161,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         QueryWrapper<QuestionTag> tagWrapper = new QueryWrapper<>();
         tagWrapper.eq("question_id", questionId);
         List<QuestionTag> tags = questionTagMapper.selectList(tagWrapper);
-        List<String> tagList = tags.stream().map(QuestionTag::getTag).collect(Collectors.toList());
+        List<String> tagList = tags.stream()
+                .map(questionTag -> tagMapper.selectById(questionTag.getTagId()).getTag())
+                .collect(Collectors.toList());
         question.setTags(tagList);
 
         // 查询评论
@@ -193,10 +196,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         request.setPage(page);
         request.setSize(size);
 
-        QuestionTag tag = questionTagMapper.selectById(tagId);
-
-        List<String> tags = new ArrayList<>();
-        tags.add(tag.getTag());
+        List<Long> tags = new ArrayList<>();
+        tags.add(tagId);
         request.setTags(tags);
         return pageQuestionList(request);
     }

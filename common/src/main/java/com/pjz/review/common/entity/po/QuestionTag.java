@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("question_tags")
+@TableName("question_tag")
 public class QuestionTag implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -24,5 +24,6 @@ public class QuestionTag implements Serializable {
     @TableField("question_id")
     private Long questionId;
 
-    private String tag;
+    @TableField("tag_id")
+    private Long tagId;
 }
