@@ -21,6 +21,7 @@
         <module>media-service</module>
         <module>content-service</module>
         <module>file-service</module>
+        <module>question-service</module>
     </modules>
 
     <!-- Java版本 -->

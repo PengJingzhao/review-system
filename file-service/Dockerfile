@@ -10,7 +10,6 @@ WORKDIR /app
 # 复制构建好的点评服务 JAR 文件
 COPY ${JAR_FILE} app.jar
 
-COPY ${AGENT_FILE} /usr/local/agent
 
 # 暴露 Dubbo 默认端口
 EXPOSE 15012
@@ -25,4 +24,4 @@ ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseContainerSupport"
 ENV AGENT_OPTS="-javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.agent.service_name=${SKYWALKING_AGENT_SERVICE_NAME} -Dskywalking.collector.backend_service=${SKYWALKING_COLLECTOR_BACKEND_SERVICE} -Djava.security.egd=file:/dev/./urandom"
 
 # 设置启动命令
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} ${AGENT_OPTS} -jar app.jar --spring.profiles.active=${SPRING_CONFIG_FILE}"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS}  -jar app.jar --spring.profiles.active=${SPRING_CONFIG_FILE}"]
