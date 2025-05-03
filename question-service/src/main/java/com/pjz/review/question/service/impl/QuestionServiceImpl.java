@@ -1,5 +1,6 @@
 package com.pjz.review.question.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,10 +10,12 @@ import com.pjz.review.common.entity.dto.QuestionPageRequest;
 import com.pjz.review.common.entity.po.Comment;
 import com.pjz.review.common.entity.po.Question;
 import com.pjz.review.common.entity.po.QuestionTag;
+import com.pjz.review.common.entity.po.Tag;
 import com.pjz.review.common.service.QuestionService;
 import com.pjz.review.question.mapper.CommentMapper;
 import com.pjz.review.question.mapper.QuestionMapper;
 import com.pjz.review.question.mapper.QuestionTagMapper;
+import com.pjz.review.question.mapper.TagMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +37,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private final QuestionTagMapper questionTagMapper;
 
     private final CommentMapper commentMapper;
+
+    private final TagMapper tagMapper;
 
     @Override
     @Transactional
@@ -165,5 +171,38 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         question.setComments(commentList);
 
         return question;
+    }
+
+    @Override
+    public List<Tag> getTags() {
+
+        LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Tag::getId, Tag::getTag);
+
+        // 根据 tag 字段去重，保留遇到的第一个 QuestionTag
+        // key 是 tag
+        // value 是元素本身
+        // 遇到重复 key 保留第一个
+
+        return tagMapper.selectList(wrapper);
+    }
+
+    @Override
+    public IPage<Question> getQuestionByTag(Long tagId, Integer page, Integer size) {
+        QuestionPageRequest request = new QuestionPageRequest();
+        request.setPage(page);
+        request.setSize(size);
+
+        QuestionTag tag = questionTagMapper.selectById(tagId);
+
+        List<String> tags = new ArrayList<>();
+        tags.add(tag.getTag());
+        request.setTags(tags);
+        return pageQuestionList(request);
+    }
+
+    @Override
+    public Long getNextQuestionId(Long currentId, Long tagId) {
+        return 0L;
     }
 }
