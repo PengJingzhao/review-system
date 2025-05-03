@@ -66,20 +66,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Long questionId = question.getId();
         log.info("获得questionId：{}", questionId);
 
-//        if (createRequest.getTags() != null && !createRequest.getTags().isEmpty()) {
-//            // 批量保存标签
-//            List<QuestionTag> tagList = createRequest.getTags().stream()
-//                    .filter(tag -> tag != null && !tag.trim().isEmpty())
-//                    .map(tag -> QuestionTag.builder()
-//                            .questionId(questionId)
-//                            .tag(tag.trim())
-//                            .build())
-//                    .toList();
-//
-//            // 批量插入标签
-//            log.info("插入标签:{}", tagList);
-//            tagList.forEach(questionTagMapper::insert);
-//        }
+        if (createRequest.getTagIds() != null && !createRequest.getTagIds().isEmpty()) {
+            createRequest.getTagIds().forEach(tagId -> {
+                QuestionTag questionTag = new QuestionTag();
+                questionTag.setQuestionId(questionId);
+                questionTag.setTagId(tagId);
+                questionTagMapper.insert(questionTag);
+            });
+        }
 
 
         return question;

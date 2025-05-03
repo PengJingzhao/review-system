@@ -28,5 +28,5 @@ public class QuestionCreateRequest implements Serializable {
     @Max(value = 5, message = "难度范围 1~5")
     private Integer difficulty;
 
-    private List<@Size(max = 50, message = "标签长度不能超过50") String> tags;
+    private List<Long> tagIds;
 }
