@@ -38,4 +38,8 @@ public interface QuestionService {
     @GetMapping("/getNext")
     Long getNextQuestionId(@RequestParam("currentId")Long currentId,@RequestParam("tagId") Long tagId);
 
+    @GetMapping("/getPrev")
+    Long getPrevQuestionId(@RequestParam("currentId")Long currentId,@RequestParam("tagId") Long tagId);
+
+
 }

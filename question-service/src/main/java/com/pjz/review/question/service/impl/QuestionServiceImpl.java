@@ -25,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -204,6 +205,36 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Override
     public Long getNextQuestionId(Long currentId, Long tagId) {
+
+        // 首先查出当前标签下的所有题目
+        List<Long> questionIds = questionTagMapper.getQuestionsByTagId(tagId);
+
+        // 根据当前题目来找出下一个题目
+//        questionIds.sort(Long::compareTo);
+
+        for (int i = 0; i < questionIds.size() - 1; i++) {
+            if (questionIds.get(i).equals(currentId)) {
+                return questionIds.get(i + 1);
+            }
+        }
+
+        return 0L;
+    }
+
+    @Override
+    public Long getPrevQuestionId(Long currentId, Long tagId) {
+        // 首先查出当前标签下的所有题目
+        List<Long> questionIds = questionTagMapper.getQuestionsByTagId(tagId);
+
+        // 根据当前题目来找出下一个题目
+//        questionIds.sort(Long::compareTo);
+
+        for (int i = 1; i < questionIds.size(); i++) {
+            if (questionIds.get(i).equals(currentId)) {
+                return questionIds.get(i - 1);
+            }
+        }
+
         return 0L;
     }
 }
