@@ -5,25 +5,26 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.pjz.commons.constants.CountConstants;
+import com.pjz.commons.constants.UserContentRelationConstants;
 import com.pjz.review.common.entity.dto.QuestionCreateRequest;
 import com.pjz.review.common.entity.dto.QuestionPageRequest;
-import com.pjz.review.common.entity.po.Comment;
-import com.pjz.review.common.entity.po.Question;
-import com.pjz.review.common.entity.po.QuestionTag;
-import com.pjz.review.common.entity.po.Tag;
-import com.pjz.review.common.service.QuestionService;
+import com.pjz.review.common.entity.po.*;
+import com.pjz.review.common.service.*;
 import com.pjz.review.question.mapper.CommentMapper;
 import com.pjz.review.question.mapper.QuestionMapper;
 import com.pjz.review.question.mapper.QuestionTagMapper;
 import com.pjz.review.question.mapper.TagMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -41,6 +42,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private final CommentMapper commentMapper;
 
     private final TagMapper tagMapper;
+
+    @DubboReference
+    private UserService userService;
+
+    @DubboReference
+    private BizCountService countService;
+
+    @DubboReference
+    private UserContentRelationService userContentRelationService;
 
     @Override
     @Transactional
@@ -230,5 +240,36 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
 
         return 0L;
+    }
+
+    @Override
+    public Long like(Long questionId, String token) {
+        Long userId = userService.getUser(token).getId();
+        // 判断是否点过赞了
+        if (userContentRelationService.relationExists(userId, questionId, UserContentRelationConstants.LIKE)) {
+            // 取消点赞
+            userContentRelationService.removeRelation(userId, questionId, UserContentRelationConstants.LIKE);
+
+            // 计数服务增加点赞数
+            countService.incrementCount(CountConstants.QUESTION, String.valueOf(questionId), CountConstants.LIKE, -1);
+            // 查询点赞数
+            BizCount count = countService.getCount(CountConstants.QUESTION, String.valueOf(questionId), CountConstants.LIKE);
+
+            return count.getCountValue();
+        }
+
+        UserContentRelation relation = UserContentRelation.builder()
+                .contentId(questionId)
+                .userId(userId)
+                .relationType(UserContentRelationConstants.LIKE)
+                .build();
+
+        userContentRelationService.addRelation(relation);
+
+        // 计数服务增加点赞数
+        countService.incrementCount(CountConstants.QUESTION, String.valueOf(questionId), CountConstants.LIKE, 1);
+
+        BizCount newCount = countService.getCount(CountConstants.QUESTION, String.valueOf(questionId), CountConstants.LIKE);
+        return newCount.getCountValue();
     }
 }

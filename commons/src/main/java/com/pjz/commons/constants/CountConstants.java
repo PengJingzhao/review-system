@@ -6,4 +6,6 @@ public class CountConstants {
 
     public static final String BLOG = "BLOG";
 
+    public static final String QUESTION = "QUESTION";
+
 }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@DubboService
 public class UserContentRelationServiceImpl
         extends ServiceImpl<UserContentRelationMapper, UserContentRelation>
         implements UserContentRelationService {

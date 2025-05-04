@@ -6,12 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @TableName("user_content_relation")
 @Builder
-public class UserContentRelation {
+public class UserContentRelation implements Serializable {
 
     @TableId(type = IdType.AUTO)
     private Long id;

@@ -41,5 +41,8 @@ public interface QuestionService {
     @GetMapping("/getPrev")
     Long getPrevQuestionId(@RequestParam("currentId")Long currentId,@RequestParam("tagId") Long tagId);
 
+    @PostMapping("/like/{questionId}")
+    Long like(@PathVariable("questionId") Long questionId, @RequestHeader("authorization") String token);
+
 
 }
