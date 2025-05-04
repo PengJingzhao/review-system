@@ -3,6 +3,9 @@ package com.pjz.review.question.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pjz.review.common.entity.po.Question;
 import com.pjz.review.common.entity.po.QuestionTag;
 import com.pjz.review.common.entity.po.Tag;
 import org.apache.ibatis.annotations.Mapper;

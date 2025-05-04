@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjz.review.question.mapper.QuestionMapper">
+
+    <select id="selectQuestionsByTagsPage" resultType="com.pjz.review.common.entity.po.Question" parameterType="map">
+        SELECT q.*
+        FROM questions q
+        JOIN (
+        SELECT q2.id
+        FROM questions q2
+        <!-- 这里根据需要join question_tag 过滤标签 -->
+        <if test="tagIds != null and tagIds.size() > 0">
+            JOIN question_tag qt ON qt.question_id = q2.id
+        </if>
+        <where>
+            <if test="difficulty != null">
+                AND q2.difficulty = #{difficulty}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (q2.title LIKE CONCAT('%', #{keyword}, '%') OR q2.answer LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="tagIds != null and tagIds.size() > 0">
+                AND qt.tag_id IN
+                <foreach collection="tagIds" item="tid" open="(" separator="," close=")">
+                    #{tid}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY q2.id
+        ORDER BY q2.id
+        LIMIT #{offset}, #{size}
+        )
+        temp ON temp.id = q.id
+        ORDER BY q.id
+    </select>
+</mapper>

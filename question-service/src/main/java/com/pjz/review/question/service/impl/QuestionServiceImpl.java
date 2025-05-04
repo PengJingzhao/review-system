@@ -25,9 +25,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -89,9 +87,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Override
     public IPage<Question> pageQuestionList(QuestionPageRequest params) {
-        int current = params.getPage() != null && params.getPage() > 0 ? params.getPage() : 1;
-        int size = params.getSize() != null && params.getSize() > 0 ? params.getSize() : 10;
-
+        // 规范分页参数，默认值：page=1，size=10
+        int current = (params.getPage() != null && params.getPage() > 0) ? params.getPage() : 1;
+        int size = (params.getSize() != null && params.getSize() > 0) ? params.getSize() : 10;
         Page<Question> page = new Page<>(current, size);
 
         QueryWrapper<Question> query = new QueryWrapper<>();
@@ -102,52 +100,70 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
 
         // 按关键词模糊搜索title和answer
-        if (StringUtils.hasText(params.getKeyword())) {
-            query.and(wrapper -> wrapper.like("title", params.getKeyword()).or().like("answer", params.getKeyword()));
+        String keyword = params.getKeyword();
+        if (StringUtils.hasText(keyword)) {
+            query.and(wrapper -> wrapper.like("title", keyword).or().like("answer", keyword));
         }
 
-        // 按标签过滤(题目必须至少含有tags中的一个，示例用IN语句)
-        if (!CollectionUtils.isEmpty(params.getTags())) {
-            // 先查question_ids 满足标签条件 ——标签表中任一匹配的question_id列表
+        // 按标签过滤（题目必须至少含有tags中的一个）
+        List<Long> filterTagIds = params.getTags();
+        if (!CollectionUtils.isEmpty(filterTagIds)) {
+            // 查询匹配标签的 question_id 列表
             QueryWrapper<QuestionTag> tagQuery = new QueryWrapper<>();
-            tagQuery.in("tag_id", params.getTags());
-            List<QuestionTag> questionTags = questionTagMapper.selectList(tagQuery);
-
-            List<Long> questionIds = questionTags.stream()
+            tagQuery.in("tag_id", filterTagIds);
+            List<Long> questionIds = questionTagMapper.selectList(tagQuery).stream()
                     .map(QuestionTag::getQuestionId)
                     .distinct()
                     .collect(Collectors.toList());
 
             if (questionIds.isEmpty()) {
-                // 直接返回空页
-                page.setRecords(List.of());
+                // 没有符合标签条件的，直接返回空页
+                page.setRecords(Collections.emptyList());
                 page.setTotal(0);
                 return page;
             }
             query.in("id", questionIds);
         }
 
-        log.info("查询参数:{},{}", page, query);
-
+        // 分页查询符合条件的题目列表
+        // todo 采用缓存优化慢sql
         IPage<Question> resultPage = this.page(page, query);
-
-        // 查询标签列表并塞入每个题目（可选，根据实际需求）
         List<Question> questions = resultPage.getRecords();
+//        Page<Question> resultPage = new Page<>();
+//        List<Question> questions = this.baseMapper.selectQuestionsByTagsPage(page, (current - 1) * size, size, params.getDifficulty(), params.getKeyword(), params.getTags());
+//        resultPage.setRecords(questions)
+//                .setTotal(this.count(query))
+//                .setSize(size)
+//                .setCurrent(current);
+
+
         if (!questions.isEmpty()) {
-            List<Long> qids = questions.stream().map(Question::getId).collect(Collectors.toList());
+            List<Long> questionIds = questions.stream().map(Question::getId).collect(Collectors.toList());
 
-            QueryWrapper<QuestionTag> tagQuery = new QueryWrapper<>();
-            tagQuery.in("question_id", qids);
-            List<QuestionTag> allTags = questionTagMapper.selectList(tagQuery);
+            // 批量查询所有这些题目的标签映射
+            QueryWrapper<QuestionTag> tagMapQuery = new QueryWrapper<>();
+            tagMapQuery.in("question_id", questionIds);
+            List<QuestionTag> allQuestionTags = questionTagMapper.selectList(tagMapQuery);
 
-            // 组装标签
-            questions.forEach(q -> {
-                List<String> relatedTags = allTags.stream()
-                        .filter(t -> t.getQuestionId().equals(q.getId()))
-                        .map(questionTag -> tagMapper.selectById(questionTag.getTagId()).getTag())
-                        .collect(Collectors.toList());
-                q.setTags(relatedTags);
-            });
+            // 去重标签ID批量查询对应标签内容，避免每题标签再单独查库（N+1问题）
+            Set<Long> allTagIds = allQuestionTags.stream()
+                    .map(QuestionTag::getTagId)
+                    .collect(Collectors.toSet());
+
+            Map<Long, String> tagIdToName = new HashMap<>();
+            if (!allTagIds.isEmpty()) {
+                tagIdToName = tagMapper.selectBatchIds(new ArrayList<>(allTagIds)).stream()
+                        .collect(Collectors.toMap(Tag::getId, Tag::getTag));
+            }
+
+            // 按题目ID聚合标签列表并设置到题目对象上
+            Map<Long, List<String>> questionIdToTags = new HashMap<>();
+            for (QuestionTag qt : allQuestionTags) {
+                questionIdToTags.computeIfAbsent(qt.getQuestionId(), k -> new ArrayList<>())
+                        .add(tagIdToName.getOrDefault(qt.getTagId(), ""));
+            }
+
+            questions.forEach(q -> q.setTags(questionIdToTags.getOrDefault(q.getId(), Collections.emptyList())));
         }
 
         return resultPage;
