@@ -46,3 +46,6 @@ dubbo:
     address: nacos://10.21.32.95:30000
   metadata-report:
     address: nacos://10.21.32.95:30000
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.pjz.review.question.mapper

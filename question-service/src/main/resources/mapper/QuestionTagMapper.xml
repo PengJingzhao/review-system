@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjz.review.question.mapper.QuestionTagMapper">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO question_tag (question_id, tag_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.questionId}, #{item.tagId})
+        </foreach>
+    </insert>
+</mapper>

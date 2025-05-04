@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.pjz.review.common.entity.po.QuestionTag;
 import com.pjz.review.common.entity.po.Tag;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,4 +19,6 @@ public interface QuestionTagMapper extends BaseMapper<QuestionTag> {
                 .eq(QuestionTag::getTagId, tagId);
         return selectObjs(wrapper).stream().map(o -> (Long) o).toList();
     }
+
+    int insertBatch(@Param("list") List<QuestionTag> questionTags);
 }

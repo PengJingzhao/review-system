@@ -55,7 +55,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Override
     @Transactional
     public Question createQuestion(QuestionCreateRequest createRequest) {
-        // 先保存题目基本信息
+// 构建并保存题目信息，MyBatis-Plus自动回填ID
         Question question = Question.builder()
                 .title(createRequest.getTitle())
                 .answer(createRequest.getAnswer())
@@ -67,24 +67,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 .commentCount(0)
                 .viewCount(0)
                 .build();
-
-        log.info("插入数据库Question:{}", question);
-
-        // 插入数据库，mybatisplus会自动设置ID返回
         this.baseMapper.insert(question);
 
-        Long questionId = question.getId();
-        log.info("获得questionId：{}", questionId);
-
-        if (createRequest.getTagIds() != null && !createRequest.getTagIds().isEmpty()) {
-            createRequest.getTagIds().forEach(tagId -> {
-                QuestionTag questionTag = new QuestionTag();
-                questionTag.setQuestionId(questionId);
-                questionTag.setTagId(tagId);
-                questionTagMapper.insert(questionTag);
-            });
+        // 处理标签关系，支持批量插入，避免循环插入数据库
+        List<Long> tagIds = createRequest.getTagIds();
+        if (tagIds != null && !tagIds.isEmpty()) {
+            List<QuestionTag> questionTags = tagIds.stream()
+                    .map(tagId -> {
+                        QuestionTag questionTag = new QuestionTag();
+                        questionTag.setQuestionId(question.getId());
+                        questionTag.setTagId(tagId);
+                        return questionTag;
+                    })
+                    .collect(Collectors.toList());
+            // 这里假设 questionTagMapper 支持批量插入方法，如 insertBatch
+            questionTagMapper.insertBatch(questionTags);
         }
-
 
         return question;
     }
@@ -187,11 +185,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Tag::getId, Tag::getTag);
 
-        // 根据 tag 字段去重，保留遇到的第一个 QuestionTag
-        // key 是 tag
-        // value 是元素本身
-        // 遇到重复 key 保留第一个
-
         return tagMapper.selectList(wrapper);
     }
 
@@ -214,8 +207,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         List<Long> questionIds = questionTagMapper.getQuestionsByTagId(tagId);
 
         // 根据当前题目来找出下一个题目
-//        questionIds.sort(Long::compareTo);
-
         for (int i = 0; i < questionIds.size() - 1; i++) {
             if (questionIds.get(i).equals(currentId)) {
                 return questionIds.get(i + 1);
@@ -231,8 +222,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         List<Long> questionIds = questionTagMapper.getQuestionsByTagId(tagId);
 
         // 根据当前题目来找出下一个题目
-//        questionIds.sort(Long::compareTo);
-
         for (int i = 1; i < questionIds.size(); i++) {
             if (questionIds.get(i).equals(currentId)) {
                 return questionIds.get(i - 1);
