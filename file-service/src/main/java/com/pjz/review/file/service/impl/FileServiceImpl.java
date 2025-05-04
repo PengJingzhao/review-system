@@ -8,6 +8,7 @@ import io.minio.errors.*;
 import io.minio.http.Method;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,18 +30,24 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadFile(MultipartFile file) {
+
         String fileName = System.currentTimeMillis() + file.getOriginalFilename();
-        try (InputStream fis = file.getInputStream()) {
-            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
-                    .contentType(file.getContentType())
-                    .object(fileName)
-                    .stream(fis, fis.available(), -1)
-                    .build();
-            minioClient.putObject(putObjectArgs);
+
+        // 文件流，大小，Content-Type
+        try (var inputStream = file.getInputStream()) {
+            // 直接将文件流上传到MinIO
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)             // MinIO桶名
+                            .object(fileName)     // 存储文件名
+                            .stream(inputStream, file.getSize(), -1)   // 文件流，长度，分块大小（-1默认）
+                            .contentType(file.getContentType())     // 文件MIME类型
+                            .build()
+            );
+            return fileName;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return fileName;
     }
 
     @Override

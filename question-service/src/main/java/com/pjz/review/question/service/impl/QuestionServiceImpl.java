@@ -60,10 +60,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Resource
     private CacheManager<Question> cacheManager;
 
+    @Resource
+    private QuestionMapper questionMapper;
+
     @Override
     @Transactional
     public Question createQuestion(QuestionCreateRequest createRequest) {
-// 构建并保存题目信息，MyBatis-Plus自动回填ID
+        // 构建并保存题目信息，MyBatis-Plus自动回填ID
         Question question = Question.builder()
                 .title(createRequest.getTitle())
                 .answer(createRequest.getAnswer())
@@ -75,7 +78,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 .commentCount(0)
                 .viewCount(0)
                 .build();
-        this.baseMapper.insert(question);
+        questionMapper.insert(question);
 
         // 处理标签关系，支持批量插入，避免循环插入数据库
         List<Long> tagIds = createRequest.getTagIds();

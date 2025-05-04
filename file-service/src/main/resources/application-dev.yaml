@@ -30,14 +30,23 @@ spring:
     host: localhost
   application:
     name: file-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.21.32.95:30000
+        ip: 10.24.3.189
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1500MB
 dubbo:
   application:
     name: ${spring.application.name}
     register-mode: instance
   protocol:
     name: tri
-    port: 50052
-    host: 10.44.73.69
+    port: 50059
+    host: 10.24.3.189
   registry:
     id: nacos-registry
     address: nacos://10.21.32.95:30000
@@ -46,7 +55,7 @@ dubbo:
   metadata-report:
     address: nacos://10.21.32.95:30000
 minio:
-  endpoint: http://xxxxx:9000
-  accessKey: xxxx
-  secretKey: xxxxx
-  bucketName: test
+  endpoint: http://10.21.32.95:10000
+  accessKey: E0bqBSnIQEIiT11ARMB6
+  secretKey: lANZ9xc55QjsnURbuWbNiJVZ5dWj7G9kBIQuK9vz
+  bucketName: review-system
