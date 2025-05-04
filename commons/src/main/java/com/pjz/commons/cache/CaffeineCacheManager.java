@@ -6,7 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.concurrent.TimeUnit;
 
 
-public class CaffeineCacheManager implements CacheManager {
+public class CaffeineCacheManager<T> implements CacheManager<T> {
 
     private static final Cache<String, String> cache;
 
@@ -24,8 +24,23 @@ public class CaffeineCacheManager implements CacheManager {
     }
 
     @Override
+    public void put(String key, String value, int expire, TimeUnit timeUnit) {
+
+    }
+
+    @Override
+    public void put(String key, Object value, int expire, TimeUnit timeUnit) {
+
+    }
+
+    @Override
     public String get(String key) {
         return cache.getIfPresent(key);
+    }
+
+    @Override
+    public T get(String key, Class<T> clazz) {
+        return null;
     }
 
     @Override

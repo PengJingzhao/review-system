@@ -5,12 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pjz.commons.cache.CacheManager;
 import com.pjz.commons.constants.CountConstants;
 import com.pjz.commons.constants.UserContentRelationConstants;
 import com.pjz.review.common.entity.dto.QuestionCreateRequest;
 import com.pjz.review.common.entity.dto.QuestionPageRequest;
 import com.pjz.review.common.entity.po.*;
 import com.pjz.review.common.service.*;
+import com.pjz.review.question.constants.RedisConstant;
 import com.pjz.review.question.mapper.CommentMapper;
 import com.pjz.review.question.mapper.QuestionMapper;
 import com.pjz.review.question.mapper.QuestionTagMapper;
@@ -19,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +31,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,6 +56,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @DubboReference
     private UserContentRelationService userContentRelationService;
+
+    @Resource
+    private CacheManager<Question> cacheManager;
 
     @Override
     @Transactional
@@ -173,27 +183,48 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
-    public Question getQuestionDetail(Integer questionId) {
-        Question question = this.baseMapper.selectById(questionId);
+    public Question getQuestionDetail(Integer questionId) throws JsonProcessingException {
+
+        String cacheKey = RedisConstant.QUESTION_DETAIL + questionId;
+
+        // 先从redis缓存中获取
+        Question question = cacheManager.get(cacheKey, Question.class);
+        if (question != null) {
+            return question;
+        }
+
+        // 查询题目内容
+        question = this.baseMapper.selectById(questionId);
         if (question == null) {
             return null;
         }
 
         // 查询标签
-        QueryWrapper<QuestionTag> tagWrapper = new QueryWrapper<>();
-        tagWrapper.eq("question_id", questionId);
-        List<QuestionTag> tags = questionTagMapper.selectList(tagWrapper);
-        List<String> tagList = tags.stream()
-                .map(questionTag -> tagMapper.selectById(questionTag.getTagId()).getTag())
-                .collect(Collectors.toList());
-        question.setTags(tagList);
+        LambdaQueryWrapper<QuestionTag> tagWrapper = new LambdaQueryWrapper<>();
+        tagWrapper.eq(QuestionTag::getQuestionId, questionId);
+        List<Long> tagIds = questionTagMapper.selectList(tagWrapper).stream()
+                .map(QuestionTag::getTagId)
+                .distinct()
+                .toList();
+        if (tagIds.isEmpty()) {
+            question.setTags(Collections.emptyList());
+        } else {
+            List<String> tagList = tagMapper.selectBatchIds(tagIds).stream()
+                    .map(Tag::getTag)
+                    .toList();
+            question.setTags(tagList);
+        }
 
         // 查询评论
-        QueryWrapper<Comment> commentWrapper = new QueryWrapper<>();
-        commentWrapper.eq("question_id", questionId).orderByDesc("create_time");
+        LambdaQueryWrapper<Comment> commentWrapper = new LambdaQueryWrapper<>();
+        commentWrapper.eq(Comment::getQuestionId, questionId).orderByDesc(Comment::getUpdateTime);
         List<Comment> commentList = commentMapper.selectList(commentWrapper);
 
         question.setComments(commentList);
+
+        // 将数据写回缓存中
+        int totalExpire = 600 + ThreadLocalRandom.current().nextInt(0, 121);
+        cacheManager.put(cacheKey, question, totalExpire, TimeUnit.SECONDS);
 
         return question;
     }

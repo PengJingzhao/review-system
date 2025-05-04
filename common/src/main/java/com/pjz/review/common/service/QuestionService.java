@@ -1,6 +1,7 @@
 package com.pjz.review.common.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pjz.review.common.entity.dto.QuestionCreateRequest;
 import com.pjz.review.common.entity.dto.QuestionPageRequest;
 import com.pjz.review.common.entity.po.Question;
@@ -27,7 +28,7 @@ public interface QuestionService {
     IPage<Question> pageQuestionList(@RequestBody QuestionPageRequest params);
 
     @GetMapping("/getQuestionDetail/{id}")
-    Question getQuestionDetail(@PathVariable("id") Integer id);
+    Question getQuestionDetail(@PathVariable("id") Integer id) throws JsonProcessingException;
 
     @GetMapping("/getTags")
     List<Tag> getTags();
