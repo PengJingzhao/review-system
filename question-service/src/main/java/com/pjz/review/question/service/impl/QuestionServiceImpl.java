@@ -92,17 +92,20 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         int size = (params.getSize() != null && params.getSize() > 0) ? params.getSize() : 10;
         Page<Question> page = new Page<>(current, size);
 
-        QueryWrapper<Question> query = new QueryWrapper<>();
+        LambdaQueryWrapper<Question> query = new LambdaQueryWrapper<>();
+        query.select(Question::getId, Question::getTitle, Question::getDifficulty,
+                Question::getAppearRate, Question::getLikeCount, Question::getCommentCount, Question::getViewCount,
+                Question::getSource, Question::getFavoriteCount, Question::getUpdateTime);
 
         // 按难度过滤
         if (params.getDifficulty() != null) {
-            query.eq("difficulty", params.getDifficulty());
+            query.eq(Question::getDifficulty, params.getDifficulty());
         }
 
         // 按关键词模糊搜索title和answer
         String keyword = params.getKeyword();
         if (StringUtils.hasText(keyword)) {
-            query.and(wrapper -> wrapper.like("title", keyword).or().like("answer", keyword));
+            query.and(wrapper -> wrapper.like(Question::getTitle, keyword).or().like(Question::getAnswer, keyword));
         }
 
         // 按标签过滤（题目必须至少含有tags中的一个）
@@ -122,7 +125,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 page.setTotal(0);
                 return page;
             }
-            query.in("id", questionIds);
+            query.in(Question::getId, questionIds);
         }
 
         // 分页查询符合条件的题目列表
