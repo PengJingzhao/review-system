@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -68,8 +70,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Resource
     private QuestionOtherMapper questionOtherMapper;
 
+    @Resource
+    private ThreadPoolExecutor threadPoolExecutor;
+
+    @Resource
+    @Lazy
+    private QuestionService questionService;
+
     @Override
-    @Transactional
     public Question createQuestion(QuestionCreateRequest createRequest) {
         // 构建并保存题目信息，MyBatis-Plus自动回填ID
         Question question = Question.builder()
@@ -83,6 +91,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 .commentCount(0)
                 .viewCount(0)
                 .build();
+
+        threadPoolExecutor.submit(() -> questionService.insertQuestion(createRequest, question));
+
+        return question;
+    }
+
+    @Transactional
+    public void insertQuestion(QuestionCreateRequest createRequest, Question question) {
+        // 异步插入数据库
         questionMapper.insert(question);
 
         // 处理标签关系，支持批量插入，避免循环插入数据库
@@ -107,8 +124,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 .type("VIDEO")
                 .build();
         questionOtherMapper.insert(questionOther);
-
-        return question;
     }
 
     @Override
@@ -243,7 +258,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         wrapper.eq(QuestionOther::getQuestionId, questionId)
                 .eq(QuestionOther::getType, "VIDEO");
         QuestionOther questionOther = questionOtherMapper.selectOne(wrapper);
-        question.setVideo(questionOther.getInfo());
+        if (questionOther != null) {
+            question.setVideo(questionOther.getInfo());
+        }
 
         // 将数据写回缓存中
         int totalExpire = 600 + ThreadLocalRandom.current().nextInt(0, 121);

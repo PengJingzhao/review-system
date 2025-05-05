@@ -45,5 +45,7 @@ public interface QuestionService {
     @PostMapping("/like/{questionId}")
     Long like(@PathVariable("questionId") Long questionId, @RequestHeader("authorization") String token);
 
+    void insertQuestion(QuestionCreateRequest createRequest, Question question);
+
 
 }
