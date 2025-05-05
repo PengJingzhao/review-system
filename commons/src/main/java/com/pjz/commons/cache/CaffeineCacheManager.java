@@ -3,6 +3,8 @@ package com.pjz.commons.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -29,6 +31,11 @@ public class CaffeineCacheManager<T> implements CacheManager<T> {
     }
 
     @Override
+    public void putList(String key, Collection<T> value, int expire, TimeUnit timeUnit) {
+
+    }
+
+    @Override
     public void put(String key, Object value, int expire, TimeUnit timeUnit) {
 
     }
@@ -41,6 +48,11 @@ public class CaffeineCacheManager<T> implements CacheManager<T> {
     @Override
     public T get(String key, Class<T> clazz) {
         return null;
+    }
+
+    @Override
+    public List<T> getList(String key, Class<T> clazz, long start, long end) {
+        return List.of();
     }
 
     @Override

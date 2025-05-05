@@ -65,6 +65,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private CacheManager<Question> cacheManager;
 
     @Resource
+    private CacheManager<Tag> tagCacheManager;
+
+    @Resource
     private QuestionMapper questionMapper;
 
     @Resource
@@ -272,10 +275,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Override
     public List<Tag> getTags() {
 
+        String cacheKey = "list:tag";
+
+        // 先到缓存中进行查找
+        List<Tag> list = tagCacheManager.getList(cacheKey, Tag.class, -1, -1);
+        if (list != null && !list.isEmpty()) {
+            return list;
+        }
+
+        // 到数据库中去查找
         LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Tag::getId, Tag::getTag);
+        List<Tag> tags = tagMapper.selectList(wrapper);
+        int totalExpire = 600 + ThreadLocalRandom.current().nextInt(0, 121);
+        tagCacheManager.putList(cacheKey, tags, totalExpire, TimeUnit.SECONDS);
 
-        return tagMapper.selectList(wrapper);
+        return tags;
     }
 
     @Override
