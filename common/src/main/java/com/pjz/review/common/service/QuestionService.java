@@ -27,6 +27,8 @@ public interface QuestionService {
     @PostMapping("/pageQuestionList")
     IPage<Question> pageQuestionList(@RequestBody QuestionPageRequest params);
 
+    List<Question> getRecommendQuestions(Long userId);
+
     @GetMapping("/getQuestionDetail/{id}")
     Question getQuestionDetail(@PathVariable("id") Integer id) throws JsonProcessingException;
 
@@ -37,10 +39,10 @@ public interface QuestionService {
     IPage<Question> getQuestionByTag(@PathVariable("tagId") Long tagId, @RequestParam("page") Integer page, @RequestParam("size") Integer size);
 
     @GetMapping("/getNext")
-    Long getNextQuestionId(@RequestParam("currentId")Long currentId,@RequestParam("tagId") Long tagId);
+    Long getNextQuestionId(@RequestParam("currentId") Long currentId, @RequestParam("tagId") Long tagId);
 
     @GetMapping("/getPrev")
-    Long getPrevQuestionId(@RequestParam("currentId")Long currentId,@RequestParam("tagId") Long tagId);
+    Long getPrevQuestionId(@RequestParam("currentId") Long currentId, @RequestParam("tagId") Long tagId);
 
     @PostMapping("/like/{questionId}")
     Long like(@PathVariable("questionId") Long questionId, @RequestHeader("authorization") String token);

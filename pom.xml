@@ -22,6 +22,7 @@
         <module>content-service</module>
         <module>file-service</module>
         <module>question-service</module>
+        <module>recommend-service</module>
     </modules>
 
     <!-- Java版本 -->

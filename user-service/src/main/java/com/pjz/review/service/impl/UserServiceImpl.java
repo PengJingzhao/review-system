@@ -30,6 +30,7 @@ import static com.pjz.review.util.RedisConstants.*;
 import com.pjz.review.mapper.AttentionMapper;
 import com.pjz.review.common.entity.po.Attention;
 import com.pjz.review.common.entity.po.Follower;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -170,6 +171,19 @@ public class UserServiceImpl implements UserService {
         userVOMap.put("user:" + userId, userVO);
 
         return userVO;
+    }
+
+    @Override
+    public Long getUserId(String token) {
+
+        String userVOKey = LOGIN_TOKEN_KEY + token;
+
+        String result = (String) stringRedisTemplate.opsForHash().get(userVOKey, "id");
+        if (!StringUtils.hasText(result)) {
+            return null;
+        }
+
+        return Long.valueOf(result);
     }
 
     @Override

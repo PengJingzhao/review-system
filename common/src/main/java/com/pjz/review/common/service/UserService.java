@@ -17,6 +17,9 @@ public interface UserService {
     @GetMapping("/getUser")
     UserVO getUser(@RequestHeader("authorization") String token);
 
+    @GetMapping("/getUserId")
+    Long getUserId(@RequestHeader("authorization") String token);
+
     @GetMapping("/followUser")
     void followUser(@RequestParam("userId") Integer userId, @RequestParam("attentionId") Integer attentionId);
 

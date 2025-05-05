@@ -1,0 +1,51 @@
+server:
+  port: 15016
+# 配置 Springdoc OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs       # OpenAPI 文档路径
+  swagger-ui:
+    path: /swagger-ui        # Swagger UI 路径
+  show-actuator: true        # 如果项目集成了 Actuator，可以显示相关文档
+
+# 自定义文档组和标题
+springdoc.group-configs:
+  - group: user-api         # 定义文档组名称
+    paths-to-match: /api/user/** # 定义包含的路径
+    packages-to-scan: com.pjz.review.controller # 定义扫描的包路径
+# 日志配置
+logging:
+  level:
+    com.pjz: info
+    org.springframework: warn
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.21.32.95:13307/review_system_recommend?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: topview
+    type: com.zaxxer.hikari.HikariDataSource
+  redis:
+    port: 6379
+    host: localhost
+  application:
+    name: recommend-service
+dubbo:
+  application:
+    name: ${spring.application.name}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: 50060
+    host: 10.24.3.189
+    serialization: fastjson2
+  registry:
+    id: nacos-registry
+    address: nacos://10.21.32.95:30000
+  config-center:
+    address: nacos://10.21.32.95:30000
+  metadata-report:
+    address: nacos://10.21.32.95:30000
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.pjz.review.question.mapper

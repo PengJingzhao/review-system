@@ -217,6 +217,45 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
+    public List<Question> getRecommendQuestions(Long userId) {
+
+        // 从数据库中查询题目列表
+        LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+        List<Question> questions = questionMapper.selectList(wrapper);
+
+        if (!questions.isEmpty()) {
+            List<Long> questionIds = questions.stream().map(Question::getId).collect(Collectors.toList());
+
+            // 批量查询所有这些题目的标签映射
+            QueryWrapper<QuestionTag> tagMapQuery = new QueryWrapper<>();
+            tagMapQuery.in("question_id", questionIds);
+            List<QuestionTag> allQuestionTags = questionTagMapper.selectList(tagMapQuery);
+
+            // 去重标签ID批量查询对应标签内容，避免每题标签再单独查库（N+1问题）
+            Set<Long> allTagIds = allQuestionTags.stream()
+                    .map(QuestionTag::getTagId)
+                    .collect(Collectors.toSet());
+
+            Map<Long, String> tagIdToName = new HashMap<>();
+            if (!allTagIds.isEmpty()) {
+                tagIdToName = tagMapper.selectBatchIds(new ArrayList<>(allTagIds)).stream()
+                        .collect(Collectors.toMap(Tag::getId, Tag::getTag));
+            }
+
+            // 按题目ID聚合标签列表并设置到题目对象上
+            Map<Long, List<String>> questionIdToTags = new HashMap<>();
+            for (QuestionTag qt : allQuestionTags) {
+                questionIdToTags.computeIfAbsent(qt.getQuestionId(), k -> new ArrayList<>())
+                        .add(tagIdToName.getOrDefault(qt.getTagId(), ""));
+            }
+
+            questions.forEach(q -> q.setTags(questionIdToTags.getOrDefault(q.getId(), Collections.emptyList())));
+        }
+
+        return questions;
+    }
+
+    @Override
     public Question getQuestionDetail(Integer questionId) throws JsonProcessingException {
 
         String cacheKey = RedisConstant.QUESTION_DETAIL + questionId;
