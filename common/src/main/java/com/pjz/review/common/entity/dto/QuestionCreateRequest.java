@@ -29,4 +29,6 @@ public class QuestionCreateRequest implements Serializable {
     private Integer difficulty;
 
     private List<Long> tagIds;
+
+    private String video;
 }

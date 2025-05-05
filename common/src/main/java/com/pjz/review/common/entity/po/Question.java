@@ -55,4 +55,7 @@ public class Question implements Serializable {
 
     @TableField(exist = false)
     private List<Comment> comments;
+
+    @TableField(exist = false)
+    private String video;
 }

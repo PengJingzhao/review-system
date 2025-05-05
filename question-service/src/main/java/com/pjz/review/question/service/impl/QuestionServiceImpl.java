@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.pjz.review.question.mapper.QuestionOtherMapper;
+
 @DubboService
 @Service
 @RequiredArgsConstructor
@@ -62,6 +64,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Resource
     private QuestionMapper questionMapper;
+
+    @Resource
+    private QuestionOtherMapper questionOtherMapper;
 
     @Override
     @Transactional
@@ -94,6 +99,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             // 这里假设 questionTagMapper 支持批量插入方法，如 insertBatch
             questionTagMapper.insertBatch(questionTags);
         }
+
+        // 将题目关联的其他信息插入数据库
+        QuestionOther questionOther = QuestionOther.builder()
+                .questionId(question.getId())
+                .info(createRequest.getVideo())
+                .type("VIDEO")
+                .build();
+        questionOtherMapper.insert(questionOther);
 
         return question;
     }
@@ -224,6 +237,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         List<Comment> commentList = commentMapper.selectList(commentWrapper);
 
         question.setComments(commentList);
+
+        // 查询其他信息
+        LambdaQueryWrapper<QuestionOther> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(QuestionOther::getQuestionId, questionId)
+                .eq(QuestionOther::getType, "VIDEO");
+        QuestionOther questionOther = questionOtherMapper.selectOne(wrapper);
+        question.setVideo(questionOther.getInfo());
 
         // 将数据写回缓存中
         int totalExpire = 600 + ThreadLocalRandom.current().nextInt(0, 121);
